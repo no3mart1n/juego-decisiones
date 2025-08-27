@@ -533,7 +533,7 @@
             <p>2. Usa las <strong>flechas del teclado</strong> para moverte (izquierda, derecha, arriba para saltar).</p>
             <p>3. Explora el mundo moviéndote a la izquierda y derecha.</p>
             <p>4. Recoge <strong>monedas doradas</strong> para aumentar tu dinero.</p>
-            <p>5. Cuando llegues a un punto de decisión (personaje con signo de interrogación), acércate y presiona la <strong>tecla ESPACIO</strong>.</p>
+            <p>5. Cuando llegues a un punto de decisión (personaje con signo de interrogación), acércate y presiona <strong>la tecla ESPACIO</strong>.</p>
             <p>6. Las preguntas aparecerán en burbujas dentro del juego, sin salir del entorno.</p>
             <p>7. Tus decisiones afectarán a tu personaje: su tamaño, capacidad de salto, apariencia y tu dinero.</p>
             <p>8. Ten cuidado con los <strong>enemigos</strong> que pueden afectar tus atributos.</p>
@@ -1079,7 +1079,7 @@ function resizeCanvas() {
                 const instructions = document.getElementById('instructions');
                 instructions.innerHTML = instructions.innerHTML
                     .replace('Flechas del teclado', 'Botones táctiles')
-                    .replace('tecla ESPACIO', 'botón ESPACIO');
+                    .replace('la tecla ESPACIO', 'el botón Acción');
                     
                 setupTouchControls();
             }
@@ -2215,4 +2215,5 @@ function resizeCanvas() {
         startBtn.style.display = 'inline-block'; // Mostrar el botón de inicio al cargar
     </script>
 </body>
+
 </html>
