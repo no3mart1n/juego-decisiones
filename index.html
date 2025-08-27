@@ -1,0 +1,2218 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mis Decisiones Mi Futuro</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            overflow-x: hidden;
+            overflow-y: auto;
+            background: #f0f8ff;
+            font-family: 'Arial', sans-serif;
+            color: #333;
+			display:flex;
+			flex-direction: column;
+			align-items:center;
+        }
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        h1 {
+            color: #2E7D32;
+            text-align: center;
+            margin-bottom: 5px;
+            font-size: 2.5em;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+        }
+        .subtitle {
+            color: #1B5E20;
+            text-align: center;
+            margin-bottom: 20px;
+            font-style: italic;
+            font-size: 1.2em;
+        }
+        .game-info {
+            display: flex;
+            justify-content: space-between;
+            width: 100%;
+            margin-bottom: 15px;
+            background: rgba(255,255,255,0.9);
+            padding: 12px 20px;
+            border-radius: 12px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            font-weight: bold;
+        }
+        .stats-container {
+            display: flex;
+            gap: 15px;
+        }
+        .stat {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        .progress-container {
+            width: 100px;
+            height: 12px;
+            background: #e0e0e0;
+            border-radius: 6px;
+            overflow: hidden;
+            margin-left: 5px;
+        }
+        .progress-bar {
+            height: 100%;
+            border-radius: 6px;
+            transition: width 0.3s ease;
+        }
+        .health { background: #4CAF50; }
+        .knowledge { background: #2196F3; }
+        .selfesteem { background: #FF9800; }
+        .money { background: #8BC34A; }
+        
+        /* Contenedor del logo */
+        .logo-container {
+            position: absolute;
+            top: 10px;
+            left: 35px;
+            z-index: 10;
+            background: rgba(255, 255, 255, 0.8);
+            padding: 5px;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+        .logo {
+            height: 60px;
+            width: auto;
+        }
+        
+        canvas {
+            display: block;
+            margin: 0 auto;
+            background: #a8e6cf;
+            border: 2px solid #4CAF50;
+            border-radius: 15px;
+            box-shadow: 0 0 20px rgba(0,0,0,0.3);
+            width: 800px;
+            height: 500px;
+        }
+        .controls {
+            margin-top: 15px;
+            background: rgba(255,255,255,0.9);
+            padding: 15px;
+            border-radius: 12px;
+            text-align: center;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            width: 800px;
+            margin: 0 auto;
+        }
+        button {
+            background: #4CAF50;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            margin: 0 8px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        }
+        button:hover {
+            background: #388E3C;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+        }
+        button.secondary {
+            background: #607D8B;
+        }
+        button.secondary:hover {
+            background: #455A64;
+        }
+        .instructions {
+            background: rgba(255,255,255,0.9);
+            padding: 15px;
+            border-radius: 12px;
+            margin: 20px 0;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            width: 800px;
+            margin: 20px auto;
+        }
+        .decision-bubble {
+            position: absolute;
+            background: white;
+            border: 2px solid #4CAF50;
+            border-radius: 15px;
+            padding: 15px;
+            width: 300px;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.3);
+            display: none;
+            z-index: 5;
+            font-size: 14px;
+            line-height: 1.4;
+            animation: fadeIn 0.3s ease-out;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .decision-question {
+            font-weight: bold;
+            color: #1B5E20;
+            margin-bottom: 10px;
+        }
+        .decision-options {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        .decision-option {
+            padding: 8px 12px;
+            background: #f1f8e9;
+            border: 1px solid #c5e1a5;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-size: 13px;
+            animation: pulse 2s infinite;
+        }
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.02); }
+            100% { transform: scale(1); }
+        }
+        .decision-option:hover {
+            background: #dcedc8;
+            border-color: #8bc34a;
+            transform: scale(1.05);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+        }
+        .topic-tag {
+            display: inline-block;
+            background: #9C27B0;
+            color: white;
+            padding: 2px 6px;
+            border-radius: 10px;
+            font-size: 10px;
+            margin-left: 8px;
+        }
+        .feedback-bubble {
+            position: absolute;
+            background: white;
+            border: 2px solid #2196F3;
+            border-radius: 15px;
+            padding: 15px;
+            width: 300px;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.3);
+            display: none;
+            z-index: 5;
+            font-size: 14px;
+            line-height: 1.4;
+            animation: slideIn 0.4s ease-out;
+        }
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateX(20px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+        .feedback-content {
+            color: #1565C0;
+            font-weight: 500;
+        }
+        .game-over, .game-won {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, rgba(0,0,0,0.8), rgba(0,0,0,0.9));
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 100;
+            color: white;
+            text-align: center;
+            display: none;
+            backdrop-filter: blur(5px);
+        }
+        .game-over h2 {
+            color: #FF5722;
+            font-size: 42px;
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+            animation: shake 0.5s ease-in-out;
+        }
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-10px); }
+            75% { transform: translateX(10px); }
+        }
+        .game-won h2 {
+            color: #4CAF50;
+            font-size: 42px;
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+            animation: bounce 1s ease-in-out;
+        }
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
+            40% { transform: translateY(-20px); }
+            60% { transform: translateY(-10px); }
+        }
+        .final-stats {
+            background: rgba(255,255,255,0.95);
+            color: #333;
+            padding: 25px;
+            border-radius: 15px;
+            margin: 20px 0;
+            width: 80%;
+            max-width: 700px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            border: 2px solid rgba(255,255,255,0.3);
+        }
+        .result-description {
+            margin: 15px 0;
+            line-height: 1.6;
+            font-size: 1.1em;
+            text-shadow: 1px 1px 2px rgba(255,255,255,0.7);
+        }
+        .hidden {
+            display: none;
+        }
+        /* Asegurar que todo sea visible */
+        .full-height {
+            min-height: 100vh;
+            box-sizing: border-box;
+        }
+        /* Audio controls */
+        .audio-controls {
+            position: fixed;
+            bottom: 100px;
+            right: 20px;
+            z-index: 100;
+            display: flex;
+            gap: 10px;
+        }
+        .audio-btn {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.8);
+            border: 2px solid #4CAF50;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+            transition: all 0.3s ease;
+        }
+        .audio-btn:hover {
+            transform: scale(1.1);
+            background: rgba(255,255,255,0.95);
+        }
+        .audio-btn.active {
+            background: #4CAF50;
+            color: white;
+        }
+        /* Enemigos */
+        .enemy-warning {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(255, 0, 0, 0.9);
+            color: white;
+            padding: 20px;
+            border-radius: 15px;
+            font-size: 24px;
+            font-weight: bold;
+            z-index: 200;
+            box-shadow: 0 0 30px rgba(255, 0, 0, 0.5);
+            display: none;
+            text-align: center;
+            animation: enemyWarning 1s infinite;
+        }
+        @keyframes enemyWarning {
+            0% { opacity: 0.7; transform: translate(-50%, -50%) scale(1); }
+            50% { opacity: 1; transform: translate(-50%, -50%) scale(1.1); }
+            100% { opacity: 0.7; transform: translate(-50%, -50%) scale(1); }
+        }
+        /* Formulario final */
+        .final-form {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #4CAF50, #2E7D32);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 100;
+            color: white;
+            text-align: center;
+            display: none;
+            backdrop-filter: blur(5px);
+        }
+        .final-form h2 {
+            font-size: 42px;
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+            animation: bounce 1s ease-in-out;
+        }
+        .final-form p {
+            font-size: 1.2em;
+            margin: 20px 0;
+            max-width: 700px;
+        }
+        .form-btn {
+            background: white;
+            color: #4CAF50;
+            border: none;
+            padding: 15px 30px;
+            margin: 20px 0;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 18px;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+        }
+        .form-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 6px 20px rgba(0,0,0,0.4);
+        }
+
+        /* Controles para móviles */
+        .mobile-controls {
+            position: fixed;
+            bottom: 20px;
+            left: 0;
+            width: 100%;
+            display: flex !important; /* Forzar visualización */
+            justify-content: space-between;
+            padding: 10px;
+            z-index: 50;
+        }
+
+        .mobile-controls-row {
+            display: flex;
+            gap: 20px;
+        }
+
+        .mobile-btn {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: rgba(76, 175, 80, 0.7);
+            border: 2px solid white;
+            color: white;
+            font-size: 24px;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            user-select: none;
+            touch-action: manipulation;
+        }
+
+        .mobile-btn:active {
+            background: rgba(56, 142, 60, 0.9);
+            transform: scale(0.95);
+        }
+
+        .action-btn {
+            width: 120px;
+            border-radius: 30px;
+            font-size: 14px;
+        }
+
+        /* Ajustes responsivos */
+        @media (max-width: 900px) {
+            .container {
+                padding: 10px;
+            }
+            
+            h1 {
+                font-size: 1.8em;
+            }
+            
+            .subtitle {
+                font-size: 1em;
+            }
+            
+           canvas {
+				/* Hacemos que el tamaño sea automático */
+				width: auto;
+				height: auto;
+				
+				/* Y le ponemos dos límites: */
+				max-width: 100%; /* No puede ser más ancho que su contenedor */
+				max-height: 90vh; /* No puede ser más alto que el 90% de la pantalla */
+
+				/* Esto mantiene la proporción correcta de 16:10 */
+				aspect-ratio: 16/10;
+			}
+            
+            .controls, .instructions {
+                width: 100% !important;
+                box-sizing: border-box;
+            }
+            
+            .game-info {
+                flex-direction: column;
+                gap: 10px;
+            }
+            
+            .stats-container {
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+            
+            .logo-container {
+                position: relative;
+                top: 0;
+                left: 0;
+                text-align: center;
+                margin-bottom: 15px;
+            }
+            
+            .decision-bubble, .feedback-bubble {
+                width: 90%;
+                left: 5% !important;
+                right: 5%;
+                max-width: 300px;
+            }
+            
+            .mobile-controls {
+                display: flex;
+            }
+        }
+
+        @media (max-width: 600px) {
+            .mobile-btn {
+                width: 50px;
+                height: 50px;
+                font-size: 20px;
+            }
+            
+            .action-btn {
+                width: 100px;
+                font-size: 12px;
+            }
+            
+            .decision-option {
+                padding: 10px;
+                font-size: 14px;
+            }
+        }
+
+        /* Prevenir zoom en inputs */
+        @media (max-device-width: 900px) {
+            input, select, textarea {
+                font-size: 16px !important;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container full-height">
+        <h1>Mis Decisiones Mi Futuro</h1>
+        <p class="subtitle">Tu camino hacia una vida saludable y plena</p>
+
+        <div id="instructions" class="instructions">
+            <h3>¿Cómo jugar?</h3>
+            <p>1. Haz clic en el botón "Comenzar Juego".</p>
+            <p>2. Usa las <strong>flechas del teclado</strong> para moverte (izquierda, derecha, arriba para saltar).</p>
+            <p>3. Explora el mundo moviéndote a la izquierda y derecha.</p>
+            <p>4. Recoge <strong>monedas doradas</strong> para aumentar tu dinero.</p>
+            <p>5. Cuando llegues a un punto de decisión (personaje con signo de interrogación), acércate y presiona la <strong>tecla ESPACIO</strong>.</p>
+            <p>6. Las preguntas aparecerán en burbujas dentro del juego, sin salir del entorno.</p>
+            <p>7. Tus decisiones afectarán a tu personaje: su tamaño, capacidad de salto, apariencia y tu dinero.</p>
+            <p>8. Ten cuidado con los <strong>enemigos</strong> que pueden afectar tus atributos.</p>
+            <p>9. Usa los botones de audio para controlar la música y los efectos de sonido.</p>
+        </div>
+
+        <div class="game-info">
+            <div class="stats-container">
+                <div class="stat">
+                    <span>Salud:</span>
+                    <div class="progress-container">
+                        <div id="healthBar" class="progress-bar health" style="width: 100%"></div>
+                    </div>
+                </div>
+                <div class="stat">
+                    <span>Conocimiento:</span>
+                    <div class="progress-container">
+                        <div id="knowledgeBar" class="progress-bar knowledge" style="width: 50%"></div>
+                    </div>
+                </div>
+                <div class="stat">
+                    <span>Autoestima:</span>
+                    <div class="progress-container">
+                        <div id="selfesteemBar" class="progress-bar selfesteem" style="width: 70%"></div>
+                    </div>
+                </div>
+                <div class="stat">
+                    <span>Dinero:</span>
+                    <div class="progress-container">
+                        <div id="moneyBar" class="progress-bar money" style="width: 40%"></div>
+                    </div>
+                </div>
+            </div>
+            <div>Nivel: <span id="level">1</span></div>
+        </div>
+
+        <div style="position: relative;">
+            <!-- Contenedor del logo -->
+            <div class="logo-container">
+                <img src="data:image/jpeg;base64,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" alt="Logo del Juego" class="logo">
+            </div>
+            
+            <canvas id="gameCanvas" width="800" height="500"></canvas>
+            <!-- Burbuja de decisión -->
+            <div id="decisionBubble" class="decision-bubble">
+                <div class="decision-question" id="decisionQuestion"></div>
+                <div class="decision-options" id="decisionOptions"></div>
+            </div>
+            <!-- Burbuja de feedback -->
+            <div id="feedbackBubble" class="feedback-bubble">
+                <div class="feedback-content" id="feedbackContent"></div>
+            </div>
+            <!-- Advertencia de enemigo -->
+            <div id="enemyWarning" class="enemy-warning">¡CUIDADO! Enemigo cerca</div>
+        </div>
+
+        <div class="controls">
+            <button id="startBtn">Comenzar Juego</button>
+            <button id="restartBtn" class="secondary hidden">Reiniciar Juego</button>
+            <p><strong>Controles:</strong> Flechas para mover, Flecha Arriba para saltar, ESPACIO para interactuar con decisiones</p>
+        </div>
+    </div>
+
+    <div id="gameOver" class="game-over">
+        <h2>¡Momento de Reflexión!</h2>
+        <p>Tus decisiones han afectado tu bienestar. Pero recuerda, siempre puedes aprender y comenzar de nuevo.</p>
+        <div class="final-stats">
+            <h3>Tu Recorrido:</h3>
+            <p><strong>Nivel alcanzado:</strong> <span id="finalLevel">1</span></p>
+            <p><strong>Preguntas respondidas:</strong> <span id="totalQuestionsAnswered">0</span></p>
+            <p><strong>Decisiones positivas:</strong> <span id="positiveDecisions">0</span></p>
+            <p><strong>Decisiones por mejorar:</strong> <span id="negativeDecisions">0</span></p>
+            <p><strong>Dinero acumulado:</strong> <span id="finalMoney">0</span></p>
+        </div>
+        <button id="tryAgainBtn">Intentar de Nuevo</button>
+    </div>
+
+    <div id="gameWon" class="game-won">
+        <h2>¡Felicitaciones!</h2>
+        <p>Has completado tu camino con decisiones que promueven tu salud, conocimiento y autoestima.</p>
+        <div class="final-stats">
+            <h3>Tu Resultado Final</h3>
+            <p><strong>Nombre:</strong> <span id="finalName">Diego</span></p>
+            <p><strong>Decisiones positivas:</strong> <span id="finalPositive">0</span> de <span id="finalTotal">15</span></p>
+            <p><strong>Dinero final:</strong> <span id="finalMoneyResult">0</span></p>
+            <div class="result-description" id="resultDescription">
+                <!-- El texto del resultado se insertará aquí dinámicamente -->
+            </div>
+            <div id="detailedResults">
+                <h4>Resumen por nivel:</h4>
+                <p><strong>Nivel 1 - Fundamentos:</strong> <span id="level1Result">0/5</span></p>
+                <p><strong>Nivel 2 - Profundización:</strong> <span id="level2Result">0/5</span></p>
+                <p><strong>Nivel 3 - Integración:</strong> <span id="level3Result">0/5</span></p>
+            </div>
+        </div>
+        <button id="playAgainBtn">Jugar de Nuevo</button>
+    </div>
+
+    <!-- Formulario final -->
+    <div id="finalForm" class="final-form">
+        <h2>¡Felicidades, lo lograste!</h2>
+        <p>Has completado todos los niveles del juego con éxito. Tu conocimiento sobre salud sexual y reproductiva, autoestima, estilos de vida saludable y proyecto de vida es admirable.</p>
+        <p>¡Participa en nuestro concurso y gana una bonita sorpresa! Solo necesitas completar el siguiente formulario:</p>
+        <a href="https://docs.google.com/forms/d/e/1FAIpQLScbJBdj7TGvgxR7IFbSctdKO73k7kxLjxwjzhI7PHpD6vFlJw/viewform?usp=dialog" target="_blank">
+            <button class="form-btn">Completar Formulario</button>
+        </a>
+        <p>¡Tu esfuerzo merece una recompensa!</p>
+    </div>
+
+    <!-- Controles de audio -->
+    <div class="audio-controls">
+        <div id="musicBtn" class="audio-btn">🎵</div>
+        <div id="soundBtn" class="audio-btn">🔊</div>
+    </div>
+
+    <!-- Controles táctiles para móviles -->
+    <div id="mobileControls" class="mobile-controls">
+        <div class="mobile-controls-row">
+            <button id="leftBtn" class="mobile-btn">←</button>
+            
+            <button id="rightBtn" class="mobile-btn">→</button>
+        </div>
+        <div class="mobile-controls-row">
+		    <button id="jumpBtn" class="mobile-btn">↑</button>
+            <button id="actionBtn" class="mobile-btn action-btn">ACCIÓN</button>
+        </div>
+    </div>
+
+    <script>
+        let gameLoopId = null;  
+	   // Elementos del DOM
+        const canvas = document.getElementById('gameCanvas');
+        const ctx = canvas.getContext('2d');
+        const startBtn = document.getElementById('startBtn');
+        const restartBtn = document.getElementById('restartBtn');
+        const decisionBubble = document.getElementById('decisionBubble');
+        const decisionQuestion = document.getElementById('decisionQuestion');
+        const decisionOptions = document.getElementById('decisionOptions');
+        const feedbackBubble = document.getElementById('feedbackBubble');
+        const feedbackContent = document.getElementById('feedbackContent');
+        const gameOver = document.getElementById('gameOver');
+        const gameWon = document.getElementById('gameWon');
+        const tryAgainBtn = document.getElementById('tryAgainBtn');
+        const playAgainBtn = document.getElementById('playAgainBtn');
+        const finalLevel = document.getElementById('finalLevel');
+        const positiveDecisions = document.getElementById('positiveDecisions');
+        const negativeDecisions = document.getElementById('negativeDecisions');
+        const finalPositive = document.getElementById('finalPositive');
+        const finalTotal = document.getElementById('finalTotal');
+        const resultDescription = document.getElementById('resultDescription');
+        const level1Result = document.getElementById('level1Result');
+        const level2Result = document.getElementById('level2Result');
+        const level3Result = document.getElementById('level3Result');
+        const finalName = document.getElementById('finalName');
+        const totalQuestionsAnswered = document.getElementById('totalQuestionsAnswered');
+        const finalMoney = document.getElementById('finalMoney');
+        const finalMoneyResult = document.getElementById('finalMoneyResult');
+        const musicBtn = document.getElementById('musicBtn');
+        const soundBtn = document.getElementById('soundBtn');
+        const finalForm = document.getElementById('finalForm');
+        const enemyWarning = document.getElementById('enemyWarning');
+
+        // Controles móviles
+        const leftBtn = document.getElementById('leftBtn');
+        const rightBtn = document.getElementById('rightBtn');
+        const jumpBtn = document.getElementById('jumpBtn');
+        const actionBtn = document.getElementById('actionBtn');
+        const mobileControls = document.getElementById('mobileControls');
+
+        // Estado del juego
+        let game = {
+            started: false,
+            currentLevel: 1,
+            maxLevel: 3,
+            avatar: 'boy1', // Avatar por defecto: Diego
+            score: 0,
+            positiveChoices: 0,
+            negativeChoices: 0,
+            totalQuestionsAnswered: 0,
+            levelQuestions: [0, 0, 0], // Preguntas por nivel
+            gameOver: false,
+            gameWon: false,
+            inDecision: false,
+            inFeedback: false,
+            cameraX: 0,
+            enemyWarningActive: false,
+            enemyWarningTimer: null
+        };
+
+        // Atributos del personaje
+        const attributes = {
+            health: 100,
+            knowledge: 50,
+            selfesteem: 70,
+            money: 40
+        };
+
+        // Jugador
+        const player = {
+            x: 100,
+            y: 350,
+            width: 40,
+            height: 60,
+            speed: 5,
+            velX: 0,
+            velY: 0,
+            jumping: false,
+            grounded: false,
+            color: '#FF5722',
+            baseJumpStrength: -12,
+            currentJumpStrength: -12,
+            baseWidth: 40,
+            baseHeight: 60,
+            glow: false,
+            bright: false,
+            dark: false,
+            blur: false,
+            wobble: false,
+            distort: false
+        };
+
+        // Gravedad y salto
+        const gravity = 0.5;
+        const friction = 0.8;
+
+        // Mundo del juego (mucho más grande que el canvas)
+        const worldWidth = 2400; // 3 veces el ancho del canvas
+        const worldHeight = 500;
+
+        // Plataformas
+        let platforms = [];
+        // Personajes de decisión (NPCs)
+        let decisionNPCs = [];
+        // Monedas
+        let coins = [];
+        // Enemigos
+        let enemies = [];
+        // Meta
+        let goal = {};
+
+        // Teclas presionadas
+        const keys = {};
+
+        // Nombre del avatar por defecto
+        const avatarNames = {
+            boy1: "Diego"
+        };
+
+        // Control de audio
+        const audio = {
+            music: null,
+            soundEffects: {
+                jump: null,
+                coin: null,
+                correct: null,
+                wrong: null,
+                enemy: null
+            },
+            musicEnabled: true,
+            soundEnabled: true
+        };
+
+        // Tipos de enemigos
+        const enemyTypes = {
+            peerPressure: {
+                color: '#F44336',
+                label: 'Presión Social',
+                impact: { selfesteem: -15, health: -10 },
+                message: '¡Todos lo están haciendo, deberías probarlo!'
+            },
+            misinformation: {
+                color: '#FF9800',
+                label: 'Desinformación',
+                impact: { knowledge: -20, selfesteem: -10 },
+                message: '¡No necesitas educación sexual, eso es solo para adultos!'
+            },
+            financialScam: {
+                color: '#795548',
+                label: 'Estafa Financiera',
+                impact: { money: -25, knowledge: -15 },
+                message: '¡Invierte todo tu dinero conmigo y serás rico en un día!'
+            },
+            toxicRelationship: {
+                color: '#9C27B0',
+                label: 'Relación Tóxica',
+                impact: { selfesteem: -20, health: -15 },
+                message: '¡Si me amaras no hablarías con otros amigos!'
+            }
+        };
+
+        // Decisiones por nivel y tema
+        const decisions = {
+            1: [
+                {
+                    question: "Un amigo te ofrece probar marihuana en una fiesta. ¿Qué haces?",
+                    topic: "Estilos de Vida Saludable",
+                    options: [
+                        { text: "Acepto, todos lo están haciendo", impact: { health: -20, selfesteem: -10, money: -20 }, type: "negative", effect: "reduceSize" },
+                        { text: "Rechazo amablemente, prefiero mantenerme claro", impact: { selfesteem: +15, knowledge: +10, money: +10 }, type: "positive", effect: "increaseJump" },
+                        { text: "No sé, tal vez un poco", impact: { health: -10, selfesteem: -5, money: -10 }, type: "negative", effect: "reduceJump" }
+                    ]
+                },
+                {
+                    question: "Has notado que tus cambios de humor afectan tus relaciones. ¿Qué haces?",
+                    topic: "Autoestima",
+                    options: [
+                        { text: "Ignoro el problema, todos tienen malos días", impact: { selfesteem: -10, knowledge: -5, money: -15 }, type: "negative", effect: "distort" },
+                        { text: "Hablo con un adulto de confianza sobre cómo me siento", impact: { selfesteem: +20, knowledge: +15, money: +15 }, type: "positive", effect: "glow" },
+                        { text: "Me encierro en mi cuarto y no hablo con nadie", impact: { selfesteem: -15, health: -5, money: -20 }, type: "negative", effect: "shrink" }
+                    ]
+                },
+                {
+                    question: "Tienes un examen importante mañana, pero tus amigos te invitan a salir. ¿Qué decides?",
+                    topic: "Proyecto de Vida",
+                    options: [
+                        { text: "Voy con mis amigos, el examen no es tan importante", impact: { knowledge: -15, money: -10 }, type: "negative", effect: "reduceSpeed" },
+                        { text: "Les agradezco pero me quedo estudiando para mi futuro", impact: { knowledge: +20, selfesteem: +10, money: +25 }, type: "positive", effect: "increaseSize" },
+                        { text: "Voy un rato corto y luego estudio", impact: { knowledge: +5, selfesteem: -5, money: +5 }, type: "negative", effect: "wobble" }
+                    ]
+                },
+                {
+                    question: "¿Cuál de estos hábitos es más beneficioso para tu salud física y mental?",
+                    topic: "Estilos de Vida Saludable",
+                    options: [
+                        { text: "Dormir solo 5 horas y pasar horas en redes sociales", impact: { health: -15, money: -15 }, type: "negative", effect: "darken" },
+                        { text: "Dormir 8 horas, hacer ejercicio y limitar el tiempo de pantalla", impact: { health: +20, selfesteem: +10, money: +20 }, type: "positive", effect: "brighten" },
+                        { text: "Depende del día, a veces cuido mi salud, otras no", impact: { health: -5, money: -5 }, type: "negative", effect: "blur" }
+                    ]
+                },
+                {
+                    question: "Un compañero te hace un comentario ofensivo sobre tu apariencia. ¿Cómo respondes?",
+                    topic: "Autoestima",
+                    options: [
+                        { text: "Me quedo callado por miedo a que se burlen más", impact: { selfesteem: -15, money: -20 }, type: "negative", effect: "shrink" },
+                        { text: "Le digo con firmeza que ese comentario no es adecuado", impact: { selfesteem: +20, knowledge: +10, money: +25 }, type: "positive", effect: "expand" },
+                        { text: "Le respondo con otro comentario ofensivo", impact: { selfesteem: -10, knowledge: -5, money: -15 }, type: "negative", effect: "distort" }
+                    ]
+                }
+            ],
+            2: [
+                {
+                    question: "Tu pareja quiere tener relaciones sexuales, pero no usan protección. ¿Qué haces?",
+                    topic: "Salud Sexual y Reproductiva",
+                    options: [
+                        { text: "Acepto, si me ama debería confiar en él/ella", impact: { health: -30, knowledge: -10, money: -30 }, type: "negative", effect: "shrink" },
+                        { text: "Explico que necesitamos usar protección para cuidarnos mutuamente", impact: { health: +15, knowledge: +25, selfesteem: +10, money: +20 }, type: "positive", effect: "glow" },
+                        { text: "No sé qué hacer, tengo miedo de perder la relación", impact: { selfesteem: -15, knowledge: -5, money: -20 }, type: "negative", effect: "wobble" }
+                    ]
+                },
+                {
+                    question: "¿Cuál de estos métodos anticonceptivos también protege contra enfermedades de transmisión sexual?",
+                    topic: "Métodos de Anticoncepción",
+                    options: [
+                        { text: "Pastillas anticonceptivas", impact: { knowledge: -10, money: -15 }, type: "negative", effect: "darken" },
+                        { text: "Condón masculino", impact: { knowledge: +25, health: +10, money: +25 }, type: "positive", effect: "brighten" },
+                        { text: "Implante hormonal", impact: { knowledge: -5, money: -10 }, type: "negative", effect: "blur" }
+                    ]
+                },
+                {
+                    question: "Una amiga te confiesa que está التفكير abortar. ¿Cómo reaccionas?",
+                    topic: "Salud Reproductiva",
+                    options: [
+                        { text: "La juzgo y le digo que es una mala persona", impact: { selfesteem: -20, knowledge: -10, money: -25 }, type: "negative", effect: "distort" },
+                        { text: "La escucho sin juzgar y le ofrezco apoyo emocional", impact: { selfesteem: +20, knowledge: +15, money: +20 }, type: "positive", effect: "expand" },
+                        { text: "Me alejo porque no quiero problemas", impact: { selfesteem: -15, knowledge: -5, money: -15 }, type: "negative", effect: "shrink" }
+                    ]
+                },
+                {
+                    question: "¿Qué significa realmente el consentimiento en una relación?",
+                    topic: "Salud Sexual",
+                    options: [
+                        { text: "Aceptar por miedo a perder a la pareja", impact: { knowledge: -15, money: -20 }, type: "negative", effect: "reduceJump" },
+                        { text: "Dar permiso libre, informado y reversible en cualquier momento", impact: { knowledge: +25, selfesteem: +10, money: +30 }, type: "positive", effect: "increaseJump" },
+                        { text: "Solo es necesario la primera vez", impact: { knowledge: -10, money: -10 }, type: "negative", effect: "wobble" }
+                    ]
+                },
+                {
+                    question: "Tu mejor amigo te dice que es homosexual y teme contárselo a su familia. ¿Qué haces?",
+                    topic: "Diversidad",
+                    options: [
+                        { text: "Le digo que está mal y que debería cambiar", impact: { selfesteem: -25, knowledge: -15, money: -30 }, type: "negative", effect: "darken" },
+                        { text: "Lo apoyo y lo ayudo a preparar cómo contarlo a su familia", impact: { selfesteem: +25, knowledge: +20, money: +25 }, type: "positive", effect: "glow" },
+                        { text: "Me alejo porque no entiendo su situación", impact: { selfesteem: -15, knowledge: -5, money: -20 }, type: "negative", effect: "blur" }
+                    ]
+                }
+            ],
+            3: [
+                {
+                    question: "Estás pensando en tu futuro. ¿Qué es más importante para ti?",
+                    topic: "Proyecto de Vida",
+                    options: [
+                        { text: "Tener una familia lo antes posible", impact: { knowledge: -5, selfesteem: -5, money: -15 }, type: "negative", effect: "shrink" },
+                        { text: "Estudiar una carrera y desarrollar mis habilidades antes de pensar en familia", impact: { knowledge: +20, selfesteem: +15, money: +35 }, type: "positive", effect: "increaseSize" },
+                        { text: "No pienso en el futuro, vivo el momento", impact: { knowledge: -10, selfesteem: -10, money: -10 }, type: "negative", effect: "wobble" }
+                    ]
+                },
+                {
+                    question: "Una amiga acaba de contarte que está embarazada y no sabe qué hacer. ¿Cómo respondes?",
+                    topic: "Embarazo",
+                    options: [
+                        { text: "Le digo que su vida ya se arruinó", impact: { selfesteem: -20, knowledge: -10, money: -25 }, type: "negative", effect: "distort" },
+                        { text: "La escucho, la apoyo y le ayudo a buscar información y apoyo profesional", impact: { selfesteem: +25, knowledge: +20, money: +30 }, type: "positive", effect: "expand" },
+                        { text: "Me alejo, no quiero problemas", impact: { selfesteem: -15, knowledge: -5, money: -20 }, type: "negative", effect: "shrink" }
+                    ]
+                },
+                {
+                    question: "¿Qué significa realmente la igualdad de género en las relaciones?",
+                    topic: "Igualdad",
+                    options: [
+                        { text: "Que los hombres toman las decisiones importantes", impact: { knowledge: -15, money: -20 }, type: "negative", effect: "darken" },
+                        { text: "Que ambos miembros de la relación tienen los mismos derechos, deberes y oportunidades", impact: { knowledge: +25, selfesteem: +10, money: +25 }, type: "positive", effect: "brighten" },
+                        { text: "Que las mujeres deben obedecer a los hombres", impact: { knowledge: -20, money: -25 }, type: "negative", effect: "blur" }
+                    ]
+                },
+                {
+                    question: "Tu pareja empieza a controlar con quién hablas y dónde vas. ¿Qué haces?",
+                    topic: "Relaciones Saludables",
+                    options: [
+                        { text: "Acepto, si me ama tiene derecho a saber", impact: { selfesteem: -25, health: -15, money: -30 }, type: "negative", effect: "distort" },
+                        { text: "Le explico que necesito mi espacio y libertad", impact: { selfesteem: +20, knowledge: +15, money: +20 }, type: "positive", effect: "glow" },
+                        { text: "No digo nada por miedo a que se enoje", impact: { selfesteem: -15, knowledge: -5, money: -15 }, type: "negative", effect: "wobble" }
+                    ]
+                },
+                {
+                    question: "Has completado tu educación básica y estás decidiendo tu próximo paso. ¿Qué eliges?",
+                    topic: "Proyecto de Vida",
+                    options: [
+                        { text: "Trabajar en lo primero que encuentre sin planificar", impact: { knowledge: -10, money: +10 }, type: "negative", effect: "shrink" },
+                        { text: "Investigar opciones educativas y de carrera que se ajusten a mis intereses", impact: { knowledge: +25, selfesteem: +15, money: +40 }, type: "positive", effect: "increaseSize" },
+                        { text: "Dependeré de lo que decidan mis padres", impact: { selfesteem: -10, knowledge: -5, money: -5 }, type: "negative", effect: "darken" }
+                    ]
+                }
+            ]
+        };
+
+        // Avatares
+        const avatars = {
+            boy1: { color: '#2196F3', type: 'male' }
+        };
+
+        // Detectar si es un dispositivo móvil
+        function isMobileDevice() {
+            return (typeof window.orientation !== "undefined") || (navigator.userAgent.indexOf('IEMobile') !== -1);
+        }
+
+        // Configurar controles táctiles
+        function setupTouchControls() {
+            if (!isMobileDevice()) return;
+            
+            // Mostrar controles en móviles
+            mobileControls.style.display = 'flex';
+            
+            // Eventos para botones táctiles
+            leftBtn.addEventListener('touchstart', () => keys['ArrowLeft'] = true);
+            leftBtn.addEventListener('touchend', () => keys['ArrowLeft'] = false);
+            
+            rightBtn.addEventListener('touchstart', () => keys['ArrowRight'] = true);
+            rightBtn.addEventListener('touchend', () => keys['ArrowRight'] = false);
+            
+            jumpBtn.addEventListener('touchstart', () => {
+                if (!player.jumping && player.grounded) {
+                    keys['ArrowUp'] = true;
+                    setTimeout(() => keys['ArrowUp'] = false, 200);
+                }
+            });
+            
+            actionBtn.addEventListener('touchstart', () => {
+                if (!game.inDecision && !game.inFeedback && game.started && !game.gameOver && !game.gameWon) {
+                    keys[' '] = true;
+                    checkDecisionInteraction();
+                    setTimeout(() => keys[' '] = false, 200);
+                }
+            });
+            
+            // Prevenir acciones por defecto en controles táctiles
+            const touchElements = [leftBtn, rightBtn, jumpBtn, actionBtn];
+            touchElements.forEach(el => {
+                el.addEventListener('touchstart', (e) => {
+                    e.preventDefault();
+                });
+            });
+        }
+
+        // Ajustar el tamaño del canvas
+function resizeCanvas() {
+    // Mantenemos la resolución interna del juego siempre en 800x500
+    canvas.width = 800;
+    canvas.height = 500;
+
+    // El CSS se encargará de escalar el canvas para que se vea bien en móviles.
+    // Solo nos aseguramos de redibujar el juego si ya ha comenzado.
+    if (game.started) {
+        draw();
+    }
+}
+
+        // Event Listeners
+        window.addEventListener('keydown', function(e) {
+            // Solo prevenir scroll con espacio si no es un dispositivo móvil
+            if (e.key === ' ' && !isMobileDevice()) {
+                e.preventDefault();
+            }
+            keys[e.key] = true;
+            
+            // Espacio para interactuar con NPCs de decisión
+            if (e.key === ' ' && !game.inDecision && !game.inFeedback && game.started && !game.gameOver && !game.gameWon) {
+                checkDecisionInteraction();
+            }
+        });
+
+        window.addEventListener('keyup', function(e) {
+            keys[e.key] = false;
+        });
+
+        startBtn.addEventListener('click', function() {
+            startGame();
+        });
+
+        restartBtn.addEventListener('click', restartGame);
+        tryAgainBtn.addEventListener('click', restartGame);
+        playAgainBtn.addEventListener('click', restartGame);
+
+        // Control de audio
+        musicBtn.addEventListener('click', function() {
+            audio.musicEnabled = !audio.musicEnabled;
+            if (audio.music) {
+                audio.music.muted = !audio.musicEnabled;
+            }
+            musicBtn.classList.toggle('active');
+        });
+
+        soundBtn.addEventListener('click', function() {
+            audio.soundEnabled = !audio.soundEnabled;
+            soundBtn.classList.toggle('active');
+        });
+
+        // Llamar a resizeCanvas al cargar y al redimensionar
+        window.addEventListener('load', function() {
+            resizeCanvas();
+            
+            if (isMobileDevice()) {
+                // Ajustar instrucciones para móviles
+                const instructions = document.getElementById('instructions');
+                instructions.innerHTML = instructions.innerHTML
+                    .replace('Flechas del teclado', 'Botones táctiles')
+                    .replace('tecla ESPACIO', 'botón ESPACIO');
+                    
+                setupTouchControls();
+            }
+        });
+        window.addEventListener('resize', resizeCanvas);
+
+        // Variables para seguimiento de gestos táctiles
+        let touchStartX = 0;
+        let touchStartY = 0;
+
+        // Eventos táctiles para gestos
+        canvas.addEventListener('touchstart', function(e) {
+            e.preventDefault();
+            const touch = e.touches[0];
+            touchStartX = touch.clientX;
+            touchStartY = touch.clientY;
+            
+            // Salto con deslizamiento rápido hacia arriba
+            if (!game.inDecision && !game.inFeedback) {
+                keys['ArrowUp'] = true;
+                setTimeout(() => keys['ArrowUp'] = false, 200);
+            }
+        });
+
+        canvas.addEventListener('touchmove', function(e) {
+            e.preventDefault();
+        });
+
+        canvas.addEventListener('touchend', function(e) {
+            e.preventDefault();
+            if (!game.inDecision && !game.inFeedback) {
+                keys['ArrowLeft'] = false;
+                keys['ArrowRight'] = false;
+            }
+        });
+
+        // Soporte para deslizamiento (swipe)
+        canvas.addEventListener('touchmove', function(e) {
+            if (game.inDecision || game.inFeedback) return;
+            
+            e.preventDefault();
+            const touch = e.touches[0];
+            const touchX = touch.clientX;
+            const touchY = touch.clientY;
+            
+            // Determinar dirección del deslizamiento
+            const diffX = touchX - touchStartX;
+            const diffY = touchY - touchStartY;
+            
+            // Umbral para detectar deslizamiento
+            if (Math.abs(diffX) > 10) {
+                if (diffX > 0) {
+                    keys['ArrowRight'] = true;
+                    keys['ArrowLeft'] = false;
+                } else {
+                    keys['ArrowLeft'] = true;
+                    keys['ArrowRight'] = false;
+                }
+            }
+            
+            // Reiniciar posición inicial para el próximo movimiento
+            touchStartX = touchX;
+            touchStartY = touchY;
+        });
+
+        // Crear elementos de audio
+        function createAudioElements() {
+            // Música de fondo
+            audio.music = new Audio();
+            audio.music.src = 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3';
+            audio.music.loop = true;
+            audio.music.volume = 0.3;
+            // Efectos de sonido
+            audio.soundEffects.jump = new Audio();
+            audio.soundEffects.jump.src = 'https://www.soundjay.com/misc/sounds/bell-ringing-05.mp3';
+            audio.soundEffects.jump.volume = 0.3;
+            audio.soundEffects.coin = new Audio();
+            audio.soundEffects.coin.src = 'https://www.soundjay.com/buttons/sounds/button-1.mp3';
+            audio.soundEffects.coin.volume = 0.3;
+            audio.soundEffects.correct = new Audio();
+            audio.soundEffects.correct.src = 'https://www.soundjay.com/misc/sounds/bell-ringing-01.mp3';
+            audio.soundEffects.correct.volume = 0.4;
+            audio.soundEffects.wrong = new Audio();
+            audio.soundEffects.wrong.src = 'https://www.soundjay.com/buttons/sounds/button-2.mp3';
+            audio.soundEffects.wrong.volume = 0.4;
+            audio.soundEffects.enemy = new Audio();
+            audio.soundEffects.enemy.src = 'https://www.soundjay.com/misc/sounds/rumble-1.mp3';
+            audio.soundEffects.enemy.volume = 0.5;
+            // Inicializar botones de audio
+            musicBtn.classList.add('active');
+            soundBtn.classList.add('active');
+        }
+
+        // Reproducir efecto de sonido
+        function playSound(sound) {
+            if (audio.soundEnabled && audio.soundEffects[sound]) {
+                audio.soundEffects[sound].currentTime = 0;
+                audio.soundEffects[sound].play().catch(e => console.log('Error al reproducir sonido:', e));
+            }
+        }
+
+        // Mostrar advertencia de enemigo
+        function showEnemyWarning() {
+            enemyWarning.style.display = 'block';
+            game.enemyWarningActive = true;
+            if (game.enemyWarningTimer) {
+                clearTimeout(game.enemyWarningTimer);
+            }
+            game.enemyWarningTimer = setTimeout(() => {
+                enemyWarning.style.display = 'none';
+                game.enemyWarningActive = false;
+            }, 2000);
+        }
+
+        // Verificar interacción con NPCs de decisión
+        function checkDecisionInteraction() {
+            for (let i = 0; i < decisionNPCs.length; i++) {
+                const npc = decisionNPCs[i];
+                if (!npc.completed && isColliding(player, npc)) {
+                    showDecisionBubble(npc);
+                    break;
+                }
+            }
+        }
+
+        // Mostrar burbuja de decisión
+        function showDecisionBubble(npc) {
+            try {
+                game.inDecision = true;
+                
+                // Calcular posición del NPC en pantalla (teniendo en cuenta la cámara)
+                const npcScreenX = npc.x - game.cameraX;
+                const npcScreenY = npc.y;
+                
+                // Posicionar la burbuja para dispositivos móviles
+                let bubbleX, bubbleY;
+                
+                if (isMobileDevice()) {
+                    // En móviles, centrar la burbuja en la pantalla
+                    bubbleX = (canvas.width - 300) / 2;
+                    bubbleY = canvas.height / 4;
+                } else {
+                    // En desktop, posición relativa al NPC
+                    bubbleX = npcScreenX - 150 + (canvas.width / 2);
+                    bubbleY = npcScreenY - 120;
+                    
+                    if (bubbleX < 10) bubbleX = 10;
+                    else if (bubbleX + 300 > canvas.width - 10) bubbleX = canvas.width - 310;
+                    if (bubbleY < 50) bubbleY = npcScreenY + 60;
+                    else if (bubbleY + 150 > canvas.height - 10) bubbleY = npcScreenY - 150;
+                }
+                
+                decisionBubble.style.left = bubbleX + 'px';
+                decisionBubble.style.top = bubbleY + 'px';
+                decisionBubble.style.display = 'block';
+                
+                const decision = decisions[game.currentLevel][npc.decisionIndex];
+                decisionQuestion.innerHTML = decision.question + ' <span class="topic-tag">' + decision.topic + '</span>';
+                decisionOptions.innerHTML = '';
+                
+                decision.options.forEach((option, index) => {
+                    const button = document.createElement('div');
+                    button.className = `decision-option ${option.type}`;
+                    button.textContent = option.text;
+                    button.onclick = () => makeDecision(npc, index);
+                    decisionOptions.appendChild(button);
+                });
+            } catch (error) {
+                console.error('Error al mostrar burbuja de decisión:', error);
+                game.inDecision = false;
+            }
+        }
+
+        // Hacer una decisión
+        function makeDecision(npc, optionIndex) {
+            try {
+                const decision = decisions[game.currentLevel][npc.decisionIndex];
+                const choice = decision.options[optionIndex];
+                // Actualizar atributos
+                if (choice.impact.health) attributes.health += choice.impact.health;
+                if (choice.impact.knowledge) attributes.knowledge += choice.impact.knowledge;
+                if (choice.impact.selfesteem) attributes.selfesteem += choice.impact.selfesteem;
+                if (choice.impact.money) attributes.money += choice.impact.money;
+                // Limitar atributos entre 0 y 100
+                attributes.health = Math.max(0, Math.min(100, attributes.health));
+                attributes.knowledge = Math.max(0, Math.min(100, attributes.knowledge));
+                attributes.selfesteem = Math.max(0, Math.min(100, attributes.selfesteem));
+                attributes.money = Math.max(0, Math.min(100, attributes.money));
+                // Contar decisiones
+                if (choice.type === 'positive') {
+                    game.positiveChoices++;
+                    if (audio.soundEnabled) playSound('correct');
+                } else {
+                    game.negativeChoices++;
+                    if (audio.soundEnabled) playSound('wrong');
+                }
+                game.totalQuestionsAnswered++;
+                if (game.currentLevel >= 1 && game.currentLevel <= 3) {
+                    game.levelQuestions[game.currentLevel - 1]++;
+                }
+                // Marcar NPC como completado
+                npc.completed = true;
+                // Aplicar efecto visual al personaje
+                applyVisualEffect(choice.effect);
+                checkLevelCompletion();
+                // Ocultar burbuja de decisión
+                decisionBubble.style.display = 'none';
+                game.inDecision = false;
+                // Mostrar burbuja de feedback
+                showFeedbackBubble(npc, decision.topic);
+            } catch (error) {
+                console.error('Error en makeDecision:', error);
+                decisionBubble.style.display = 'none';
+                game.inDecision = false;
+                game.inFeedback = false;  // Asegurar que no quede bloqueado
+            }	
+        }
+
+        // Nueva función para verificar si se completó el nivel
+        function checkLevelCompletion() {
+            const allDecisionsCompleted = decisionNPCs.every(npc => npc.completed);
+            if (allDecisionsCompleted) {
+                goal.active = true;
+                goal.activeSince = Date.now();
+            }
+        }
+
+        // Aplicar efecto visual al personaje
+        function applyVisualEffect(effect) {
+            switch(effect) {
+                case "increaseSize":
+                    player.width = Math.min(player.width + 5, player.baseWidth * 1.5);
+                    player.height = Math.min(player.height + 8, player.baseHeight * 1.5);
+                    break;
+                case "reduceSize":
+                    player.width = Math.max(player.width - 5, player.baseWidth * 0.7);
+                    player.height = Math.max(player.height - 8, player.baseHeight * 0.7);
+                    break;
+                case "shrink":
+                    player.width = Math.max(player.width - 3, player.baseWidth * 0.8);
+                    player.height = Math.max(player.height - 5, player.baseHeight * 0.8);
+                    break;
+                case "expand":
+                    player.width = Math.min(player.width + 3, player.baseWidth * 1.3);
+                    player.height = Math.min(player.height + 5, player.baseHeight * 1.3);
+                    break;
+                case "increaseJump":
+                    player.currentJumpStrength = Math.max(player.baseJumpStrength - 3, player.baseJumpStrength - 5);
+                    break;
+                case "reduceJump":
+                    player.currentJumpStrength = Math.min(player.baseJumpStrength + 2, player.baseJumpStrength + 4);
+                    break;
+                case "glow":
+                    player.glow = true;
+                    setTimeout(() => { player.glow = false; }, 5000);
+                    break;
+                case "brighten":
+                    player.bright = true;
+                    setTimeout(() => { player.bright = false; }, 5000);
+                    break;
+                case "darken":
+                    player.dark = true;
+                    setTimeout(() => { player.dark = false; }, 5000);
+                    break;
+                case "blur":  // Modificado: efecto alternativo para móviles
+                    // No hacemos nada con blur ya que no es compatible
+                    break;
+                case "wobble":
+                    player.wobble = true;
+                    setTimeout(() => { player.wobble = false; }, 5000);
+                    break;
+                case "distort":
+                    player.distort = true;
+                    setTimeout(() => { player.distort = false; }, 5000);
+                    break;
+                case "reduceSpeed":
+                    player.speed = Math.max(3, player.speed - 1);
+                    setTimeout(() => { player.speed = 5; }, 5000);
+                    break;
+            }
+            updateProgressBars();
+        }
+
+        // Mostrar burbuja de feedback
+        function showFeedbackBubble(npc, topic) {
+            game.inFeedback = true;
+            const npcScreenX = npc.x - game.cameraX;
+            const npcScreenY = npc.y;
+            let bubbleX = npcScreenX - 150 + (canvas.width / 2);
+            let bubbleY = npcScreenY - 120;
+            if (bubbleX < 10) bubbleX = 10;
+            else if (bubbleX + 300 > canvas.width - 10) bubbleX = canvas.width - 310;
+            if (bubbleY < 50) bubbleY = npcScreenY + 60;
+            else if (bubbleY + 100 > canvas.height - 10) bubbleY = npcScreenY - 100;
+            feedbackBubble.style.left = bubbleX + 'px';
+            feedbackBubble.style.top = bubbleY + 'px';
+            feedbackBubble.style.display = 'block';
+            const feedbackTexts = {
+                "Estilos de Vida Saludable": [
+                    "Las drogas pueden afectar tu desarrollo cerebral y tu salud a largo plazo. Saber decir no es una habilidad importante.",
+                    "El ejercicio regular, una alimentación balanceada y un buen descanso son fundamentales para tu bienestar físico y mental.",
+                    "Dormir lo suficiente y limitar el tiempo de pantalla ayuda a mejorar tu concentración, estado de ánimo y salud general."
+                ],
+                "Autoestima": [
+                    "Hablar sobre tus emociones con personas de confianza fortalece tu salud mental y tus relaciones.",
+                    "Defender tu dignidad con respeto fortalece tu autoestima y establece límites saludables en tus relaciones.",
+                    "Valorarte a ti mismo es el primer paso para construir relaciones saludables y tomar decisiones que beneficien tu vida."
+                ],
+                "Proyecto de Vida": [
+                    "Planificar tu futuro te permite tomar decisiones informadas que respetan tus metas y valores.",
+                    "Prepararte profesionalmente te da independencia y te permite construir una vida según tus propios deseos.",
+                    "Investigar tus opciones educativas y profesionales te permite tomar decisiones informadas que se alinean con tus intereses y talentos."
+                ],
+                "Salud Sexual y Reproductiva": [
+                    "Las relaciones saludables se basan en el respeto mutuo y la protección conjunta. El uso de protección es esencial.",
+                    "El consentimiento es un acuerdo claro, entusiasta y reversible. Debe darse libremente en cada encuentro íntimo.",
+                    "Apoyar a quienes atraviesan situaciones difíciles con empatía y orientación es fundamental para su bienestar."
+                ],
+                "Métodos de Anticoncepción": [
+                    "El condón es el único método anticonceptivo que también previene enfermedades de transmisión sexual.",
+                    "Conocer los diferentes métodos anticonceptivos te permite tomar decisiones informadas sobre tu salud reproductiva.",
+                    "La planificación familiar responsable permite a las personas decidir si, cuándo y cuántos hijos tener."
+                ],
+                "Salud Reproductiva": [
+                    "Escuchar sin juzgar y ofrecer apoyo emocional es la mejor forma de ayudar a alguien que atraviesa una situación difícil.",
+                    "Todas las personas tienen derecho a recibir información y servicios de salud reproductiva con respeto y sin discriminación.",
+                    "El apoyo social y emocional es crucial para la salud mental de quienes enfrentan decisiones complejas sobre su cuerpo y vida."
+                ],
+                "Diversidad": [
+                    "Apoyar la identidad de tus amigos fortalece la amistad y promueve un entorno inclusivo y respetuoso.",
+                    "La diversidad sexual y de género es parte natural de la humanidad. El respeto a todas las identidades es fundamental.",
+                    "Ayudar a otros a comunicar sus verdades personal fortalece los vínculos y promueve la aceptación."
+                ],
+                "Embarazo": [
+                    "Juzgar a quienes enfrentan un embarazo no planificado no ayuda. Lo importante es el apoyo y la información.",
+                    "Las personas que enfrentan un embarazo no planificado necesitan apoyo emocional, información y opciones sin juicios.",
+                    "El apoyo incondicional y la orientación profesional son clave para que las personas tomen decisiones informadas sobre su maternidad."
+                ],
+                "Igualdad": [
+                    "La igualdad de género significa que todas las personas, sin importar su género, tienen los mismos derechos y oportunidades.",
+                    "En relaciones saludables, las decisiones se toman en conjunto, con respeto mutuo y equidad en responsabilidades.",
+                    "Romper con estereotipos de género permite a las personas desarrollarse plenamente según sus intereses y capacidades, no según expectativas sociales."
+                ],
+                "Relaciones Saludables": [
+                    "Controlar a tu pareja es una forma de violencia. En relaciones saludables, ambos tienen libertad y autonomía.",
+                    "Expresar tus necesidades y límites es esencial para relaciones basadas en el respeto mutuo y la confianza.",
+                    "El control, celos extremos y aislamiento son señales de alerta de relaciones tóxicas que pueden volverse abusivas."
+                ]
+            };
+            const topicFeedbacks = feedbackTexts[topic];
+            const randomIndex = Math.floor(Math.random() * topicFeedbacks.length);
+            const feedbackText = topicFeedbacks[randomIndex];
+            feedbackContent.textContent = feedbackText;
+            setTimeout(() => {
+                feedbackBubble.style.display = 'none';
+                game.inFeedback = false;  // ¡Esta línea es crucial para que el juego continúe!
+            }, 4000);
+        }
+
+        // Generar nivel
+        function generateLevel(level) {
+            platforms = [];
+            decisionNPCs = [];
+            coins = [];
+            enemies = [];
+            goal = { active: false };
+            // Resetear efectos visuales del jugador
+            player.width = player.baseWidth;
+            player.height = player.baseHeight;
+            player.currentJumpStrength = player.baseJumpStrength;
+            player.speed = 5;
+            player.glow = false;
+            player.bright = false;
+            player.dark = false;
+            player.blur = false;
+            player.wobble = false;
+            player.distort = false;
+            // Configuración por nivel
+            if (level === 1) {
+                platforms.push({
+                    x: 0,
+                    y: canvas.height - 40,
+                    width: worldWidth,
+                    height: 40,
+                    color: '#8B4513'
+                });
+                platforms.push({ x: 300, y: 350, width: 150, height: 20, color: '#8B4513' });
+                platforms.push({ x: 600, y: 300, width: 150, height: 20, color: '#8B4513' });
+                platforms.push({ x: 900, y: 250, width: 150, height: 20, color: '#8B4513' });
+                platforms.push({ x: 1200, y: 300, width: 150, height: 20, color: '#8B4513' });
+                platforms.push({ x: 1500, y: 350, width: 150, height: 20, color: '#8B4513' });
+                platforms.push({ x: 1800, y: 300, width: 150, height: 20, color: '#8B4513' });
+                platforms.push({ x: 2100, y: 250, width: 150, height: 20, color: '#8B4513' });
+                decisionNPCs.push({ x: 400, y: 320, width: 40, height: 60, completed: false, decisionIndex: 0, color: '#FF5722' });
+                decisionNPCs.push({ x: 700, y: 270, width: 40, height: 60, completed: false, decisionIndex: 1, color: '#FF5722' });
+                decisionNPCs.push({ x: 1300, y: 270, width: 40, height: 60, completed: false, decisionIndex: 2, color: '#FF5722' });
+                decisionNPCs.push({ x: 1600, y: 320, width: 40, height: 60, completed: false, decisionIndex: 3, color: '#FF5722' });
+                decisionNPCs.push({ x: 2200, y: 220, width: 40, height: 60, completed: false, decisionIndex: 4, color: '#FF5722' });
+                for (let i = 0; i < 15; i++) {
+                    coins.push({ 
+                        x: 100 + i * 150, 
+                        y: 250,  
+                        width: 20, 
+                        height: 20, 
+                        collected: false 
+                    });
+                }
+                enemies.push({ 
+                    x: 500, 
+                    y: 370, 
+                    width: 40, 
+                    height: 40, 
+                    type: 'peerPressure',
+                    speed: 1,
+                    direction: 1,
+                    range: 100,
+                    active: true
+                });
+                enemies.push({ 
+                    x: 1000, 
+                    y: 320, 
+                    width: 40, 
+                    height: 40, 
+                    type: 'misinformation',
+                    speed: 1.5,
+                    direction: -1,
+                    range: 150,
+                    active: true
+                });
+                goal = { x: 2300, y: 210, width: 40, height: 40, active: false };
+            }
+            else if (level === 2) {
+                platforms.push({
+                    x: 0,
+                    y: canvas.height - 40,
+                    width: worldWidth,
+                    height: 40,
+                    color: '#8B4513'
+                });
+                platforms.push({ x: 200, y: 380, width: 100, height: 20, color: '#8B4513' });
+                platforms.push({ x: 400, y: 330, width: 100, height: 20, color: '#8B4513' });
+                platforms.push({ x: 600, y: 280, width: 100, height: 20, color: '#8B4513' });
+                platforms.push({ x: 800, y: 230, width: 100, height: 20, color: '#8B4513' });
+                platforms.push({ x: 1000, y: 280, width: 100, height: 20, color: '#8B4513' });
+                platforms.push({ x: 1200, y: 330, width: 100, height: 20, color: '#8B4513' });
+                platforms.push({ x: 1400, y: 380, width: 100, height: 20, color: '#8B4513' });
+                platforms.push({ x: 1600, y: 330, width: 100, height: 20, color: '#8B4513' });
+                platforms.push({ x: 1800, y: 280, width: 100, height: 20, color: '#8B4513' });
+                platforms.push({ x: 2000, y: 230, width: 100, height: 20, color: '#8B4513' });
+                platforms.push({ x: 2200, y: 280, width: 100, height: 20, color: '#8B4513' });
+                platforms.push({ x: 500, y: 180, width: 100, height: 20, color: '#2196F3', moving: true, speed: 2, direction: 1, range: 150 });
+                platforms.push({ x: 1500, y: 180, width: 100, height: 20, color: '#2196F3', moving: true, speed: 3, direction: -1, range: 200 });
+                decisionNPCs.push({ x: 300, y: 350, width: 40, height: 60, completed: false, decisionIndex: 0, color: '#FF5722' });
+                decisionNPCs.push({ x: 700, y: 250, width: 40, height: 60, completed: false, decisionIndex: 1, color: '#FF5722' });
+                decisionNPCs.push({ x: 1300, y: 300, width: 40, height: 60, completed: false, decisionIndex: 2, color: '#FF5722' });
+                decisionNPCs.push({ x: 1700, y: 250, width: 40, height: 60, completed: false, decisionIndex: 3, color: '#FF5722' });
+                decisionNPCs.push({ x: 2100, y: 250, width: 40, height: 60, completed: false, decisionIndex: 4, color: '#FF5722' });
+                for (let i = 0; i < 20; i++) {
+                    coins.push({ 
+                        x: 150 + i * 120, 
+                        y: 200 + (i % 3) * 60, 
+                        width: 20, 
+                        height: 20, 
+                        collected: false 
+                    });
+                }
+                enemies.push({ 
+                    x: 400, 
+                    y: 350, 
+                    width: 40, 
+                    height: 40, 
+                    type: 'financialScam',
+                    speed: 2,
+                    direction: 1,
+                    range: 120,
+                    active: true
+                });
+                enemies.push({ 
+                    x: 1200, 
+                    y: 250, 
+                    width: 40, 
+                    height: 40, 
+                    type: 'peerPressure',
+                    speed: 1.8,
+                    direction: -1,
+                    range: 180,
+                    active: true
+                });
+                enemies.push({ 
+                    x: 1800, 
+                    y: 200, 
+                    width: 40, 
+                    height: 40, 
+                    type: 'misinformation',
+                    speed: 1.2,
+                    direction: 1,
+                    range: 100,
+                    active: true
+                });
+                goal = { x: 2300, y: 250, width: 40, height: 40, active: false };
+            }
+            else if (level === 3) {
+                platforms.push({
+                    x: 0,
+                    y: canvas.height - 40,
+                    width: worldWidth,
+                    height: 40,
+                    color: '#8B4513'
+                });
+                platforms.push({ x: 100, y: 360, width: 80, height: 20, color: '#8B4513' });
+                platforms.push({ x: 300, y: 310, width: 80, height: 20, color: '#8B4513' });
+                platforms.push({ x: 500, y: 260, width: 80, height: 20, color: '#8B4513' });
+                platforms.push({ x: 700, y: 210, width: 80, height: 20, color: '#8B4513' });
+                platforms.push({ x: 900, y: 260, width: 80, height: 20, color: '#8B4513' });
+                platforms.push({ x: 1100, y: 310, width: 80, height: 20, color: '#8B4513' });
+                platforms.push({ x: 1300, y: 360, width: 80, height: 20, color: '#8B4513' });
+                platforms.push({ x: 1500, y: 310, width: 80, height: 20, color: '#8B4513' });
+                platforms.push({ x: 1700, y: 260, width: 80, height: 20, color: '#8B4513' });
+                platforms.push({ x: 1900, y: 210, width: 80, height: 20, color: '#8B4513' });
+                platforms.push({ x: 2100, y: 260, width: 80, height: 20, color: '#8B4513' });
+                platforms.push({ x: 400, y: 160, width: 100, height: 20, color: '#2196F3', moving: true, speed: 3, direction: 1, range: 150 });
+                platforms.push({ x: 800, y: 340, width: 100, height: 20, color: '#2196F3', moving: true, speed: 2, direction: -1, range: 200 });
+                platforms.push({ x: 1600, y: 160, width: 100, height: 20, color: '#2196F3', moving: true, speed: 4, direction: 1, range: 180 });
+                decisionNPCs.push({ x: 200, y: 330, width: 40, height: 60, completed: false, decisionIndex: 0, color: '#FF5722' });
+                decisionNPCs.push({ x: 600, y: 230, width: 40, height: 60, completed: false, decisionIndex: 1, color: '#FF5722' });
+                decisionNPCs.push({ x: 1200, y: 330, width: 40, height: 60, completed: false, decisionIndex: 2, color: '#FF5722' });
+                decisionNPCs.push({ x: 1800, y: 230, width: 40, height: 60, completed: false, decisionIndex: 3, color: '#FF5722' });
+                decisionNPCs.push({ x: 2200, y: 230, width: 40, height: 60, completed: false, decisionIndex: 4, color: '#FF5722' });
+                for (let i = 0; i < 25; i++) {
+                    coins.push({ 
+                        x: 200 + i * 90, 
+                        y: 180 + (i % 4) * 50, 
+                        width: 20, 
+                        height: 20, 
+                        collected: false 
+                    });
+                }
+                enemies.push({ 
+                    x: 300, 
+                    y: 330, 
+                    width: 40, 
+                    height: 40, 
+                    type: 'toxicRelationship',
+                    speed: 2.2,
+                    direction: 1,
+                    range: 140,
+                    active: true
+                });
+                enemies.push({ 
+                    x: 800, 
+                    y: 180, 
+                    width: 40, 
+                    height: 40, 
+                    type: 'financialScam',
+                    speed: 1.8,
+                    direction: -1,
+                    range: 160,
+                    active: true
+                });
+                enemies.push({ 
+                    x: 1400, 
+                    y: 330, 
+                    width: 40, 
+                    height: 40, 
+                    type: 'peerPressure',
+                    speed: 2,
+                    direction: 1,
+                    range: 120,
+                    active: true
+                });
+                enemies.push({ 
+                    x: 2000, 
+                    y: 230, 
+                    width: 40, 
+                    height: 40, 
+                    type: 'misinformation',
+                    speed: 1.5,
+                    direction: -1,
+                    range: 100,
+                    active: true
+                });
+                goal = { x: 2300, y: 230, width: 40, height: 40, active: false };
+            }
+            player.x = 100;
+            player.y = 300;
+            player.velY = 0;
+            player.velX = 0;
+            game.cameraX = 0;
+        }
+
+        // Actualizar enemigos
+        function updateEnemies() {
+            enemies.forEach(enemy => {
+                if (enemy.active) {
+                    if (enemy.originalX === undefined) {
+                        enemy.originalX = enemy.x;
+                    }
+                    enemy.x += enemy.speed * enemy.direction;
+                    if (enemy.x <= enemy.originalX - enemy.range/2 || 
+                        enemy.x >= enemy.originalX + enemy.range/2) {
+                        enemy.direction *= -1;
+                    }
+                    if (isColliding(player, enemy)) {
+                        const impact = enemyTypes[enemy.type].impact;
+                        if (impact.health) attributes.health = Math.max(0, attributes.health - 5);
+                        if (impact.knowledge) attributes.knowledge = Math.max(0, attributes.knowledge - 5);
+                        if (impact.selfesteem) attributes.selfesteem = Math.max(0, attributes.selfesteem - 5);
+                        if (impact.money) attributes.money = Math.max(0, attributes.money - 5);
+                        if (!game.enemyWarningActive) {
+                            showEnemyWarning();
+                            if (audio.soundEnabled) playSound('enemy');
+                        }
+                        player.distort = true;
+                        setTimeout(() => { player.distort = false; }, 1000);
+                    }
+                }
+            });
+            updateProgressBars();
+        }
+
+        // Actualizar barras de progreso
+        function updateProgressBars() {
+            document.getElementById('healthBar').style.width = attributes.health + '%';
+            document.getElementById('knowledgeBar').style.width = attributes.knowledge + '%';
+            document.getElementById('selfesteemBar').style.width = attributes.selfesteem + '%';
+            document.getElementById('moneyBar').style.width = attributes.money + '%';
+            document.getElementById('level').textContent = game.currentLevel;
+        }
+
+        // Colisiones
+        function isColliding(obj1, obj2) {
+            return obj1.x < obj2.x + obj2.width &&
+                   obj1.x + obj1.width > obj2.x &&
+                   obj1.y < obj2.y + obj2.height &&
+                   obj1.y + obj1.height > obj2.y;
+        }
+
+        // Actualizar plataformas móviles
+        function updateMovingPlatforms() {
+            platforms.forEach(platform => {
+                if (platform.moving) {
+                    if (platform.originalX === undefined) {
+                        platform.originalX = platform.x;
+                    }
+                    platform.x += platform.speed * platform.direction;
+                    if (platform.x <= platform.originalX - platform.range/2 || 
+                        platform.x >= platform.originalX + platform.range/2) {
+                        platform.direction *= -1;
+                    }
+                }
+            });
+        }
+
+        // Actualizar juego
+        function update() {
+            if (!game.started || game.gameOver || game.gameWon || game.inDecision || game.inFeedback) {
+                // Si estamos en feedback, pero la burbuja no está visible, restablecer el estado
+                if (game.inFeedback && feedbackBubble.style.display === 'none') {
+                    game.inFeedback = false;
+                }
+                return;
+            }
+            player.velY += gravity;
+            if (keys['ArrowLeft']) {
+                if (player.velX > -player.speed) {
+                    player.velX--;
+                }
+            }
+            if (keys['ArrowRight']) {
+                if (player.velX < player.speed) {
+                    player.velX++;
+                }
+            }
+            if (keys['ArrowUp'] && !player.jumping && player.grounded) {
+                player.jumping = true;
+                player.grounded = false;
+                player.velY = player.currentJumpStrength;
+                if (audio.soundEnabled) playSound('jump');
+            }
+            player.velX *= friction;
+            player.x += player.velX;
+            player.y += player.velY;
+            player.grounded = false;
+            platforms.forEach(platform => {
+                const collision = isColliding(player, platform);
+                if (collision) {
+                    if (player.y + player.height >= platform.y && 
+                        player.y < platform.y) {
+                        player.y = platform.y - player.height;
+                        player.velY = 0;
+                        player.grounded = true;
+                        player.jumping = false;
+                    }
+                    else if (player.y <= platform.y + platform.height && 
+                             player.y + player.height > platform.y + platform.height) {
+                        player.y = platform.y + platform.height;
+                        player.velY = 0;
+                    }
+                    else if (player.x + player.width >= platform.x && 
+                             player.x < platform.x) {
+                        player.x = platform.x - player.width;
+                        player.velX = 0;
+                    }
+                    else if (player.x <= platform.x + platform.width && 
+                             player.x + player.width > platform.x + platform.width) {
+                        player.x = platform.x + platform.width;
+                        player.velX = 0;
+                    }
+                }
+            });
+            updateMovingPlatforms();
+            updateEnemies();
+            coins.forEach(coin => {
+                if (!coin.collected && isColliding(player, coin)) {
+                    coin.collected = true;
+                    attributes.money = Math.min(100, attributes.money + 5);
+                    updateProgressBars();
+                    if (audio.soundEnabled) playSound('coin');
+                }
+            });
+            if (goal.active && isColliding(player, goal)) {
+                if (game.currentLevel < game.maxLevel) {
+                    game.currentLevel++;
+                    generateLevel(game.currentLevel);
+                    updateProgressBars();
+                } else {
+                    game.gameWon = true;
+                    showFinalForm();
+                }
+                return;
+            }
+            if (player.x < 0) {
+                player.x = 0;
+            } else if (player.x + player.width > worldWidth) {
+                player.x = worldWidth - player.width;
+            }
+            if (player.y > worldHeight) {
+                player.x = 100;
+                player.y = 300;
+                player.velY = 0;
+                player.velX = 0;
+                attributes.health = Math.max(20, attributes.health - 10);
+                attributes.selfesteem = Math.max(20, attributes.selfesteem - 5);
+                updateProgressBars();
+            }
+            if (attributes.health <= 10 || attributes.selfesteem <= 10 || attributes.money <= 5) {
+                game.gameOver = true;
+                showGameOver();
+            }
+            const canvasCenterX = canvas.width / 2;
+            const playerScreenX = player.x - game.cameraX;
+            if (playerScreenX < canvasCenterX * 0.4) {
+                game.cameraX = Math.max(0, player.x - canvasCenterX * 0.4);
+            } else if (playerScreenX > canvasCenterX * 1.6) {
+                game.cameraX = Math.min(worldWidth - canvas.width, player.x - canvasCenterX * 1.6);
+            }
+        }
+
+        // Mostrar game over
+        function showGameOver() {
+            gameOver.style.display = 'flex';
+            finalLevel.textContent = game.currentLevel;
+            totalQuestionsAnswered.textContent = game.totalQuestionsAnswered;
+            positiveDecisions.textContent = game.positiveChoices;
+            negativeDecisions.textContent = game.negativeChoices;
+            finalMoney.textContent = Math.round(attributes.money);
+            restartBtn.style.display = 'inline-block';
+            startBtn.style.display = 'none';
+        }
+
+        // Mostrar formulario final
+        function showFinalForm() {
+            finalForm.style.display = 'flex';
+            restartBtn.style.display = 'inline-block';
+            startBtn.style.display = 'none';
+        }
+
+        // Dibujar
+        function draw() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            const drawX = (x) => x - game.cameraX;
+            const drawY = (y) => y;
+            const bgGradient = ctx.createLinearGradient(0, 0, 0, canvas.height);
+            bgGradient.addColorStop(0, '#a8e6cf');
+            bgGradient.addColorStop(1, '#dcedc8');
+            ctx.fillStyle = bgGradient;
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            ctx.fillStyle = 'rgba(255, 255, 255, 0.7)';
+            const cloudX1 = (50 - game.cameraX * 0.2) % (canvas.width + 100);
+            const cloudX2 = (300 - game.cameraX * 0.3) % (canvas.width + 100);
+            const cloudX3 = (600 - game.cameraX * 0.1) % (canvas.width + 100);
+            ctx.beginPath();
+            ctx.arc(cloudX1, 80, 30, 0, Math.PI * 2);
+            ctx.arc(cloudX1 + 30, 80, 40, 0, Math.PI * 2);
+            ctx.arc(cloudX1 + 70, 80, 30, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.beginPath();
+            ctx.arc(cloudX2, 60, 25, 0, Math.PI * 2);
+            ctx.arc(cloudX2 + 30, 60, 35, 0, Math.PI * 2);
+            ctx.arc(cloudX2 + 60, 60, 25, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.beginPath();
+            ctx.arc(cloudX3, 100, 35, 0, Math.PI * 2);
+            ctx.arc(cloudX3 + 40, 100, 50, 0, Math.PI * 2);
+            ctx.arc(cloudX3 + 90, 100, 35, 0, Math.PI * 2);
+            ctx.fill();
+            
+            // Verificar que el juego esté iniciado y no sea game over o won
+            if (game.started && !game.gameOver && !game.gameWon) {
+                // Dibujar plataformas
+                platforms.forEach(platform => {
+                    const screenX = drawX(platform.x);
+                    if (screenX + platform.width >= -50 && screenX <= canvas.width + 50) {
+                        ctx.fillStyle = platform.color;
+                        ctx.fillRect(screenX, drawY(platform.y), platform.width, platform.height);
+                        ctx.strokeStyle = '#5D4037';
+                        ctx.lineWidth = 2;
+                        ctx.strokeRect(screenX, drawY(platform.y), platform.width, platform.height);
+                        if (platform.color === '#8B4513') {
+                            ctx.strokeStyle = '#6D4C41';
+                            ctx.lineWidth = 1;
+                            for (let i = 0; i < platform.width; i += 20) {
+                                ctx.beginPath();
+                                ctx.moveTo(screenX + i, drawY(platform.y));
+                                ctx.lineTo(screenX + i, drawY(platform.y) + platform.height);
+                                ctx.stroke();
+                            }
+                        }
+                    }
+                });
+                
+                // Dibujar enemigos
+                enemies.forEach(enemy => {
+                    if (enemy.active) {
+                        const screenX = drawX(enemy.x);
+                        if (screenX + enemy.width >= -50 && screenX <= canvas.width + 50) {
+                            ctx.fillStyle = enemyTypes[enemy.type].color;
+                            ctx.fillRect(screenX, drawY(enemy.y), enemy.width, enemy.height);
+                            ctx.fillStyle = 'white';
+                            ctx.beginPath();
+                            ctx.arc(screenX + 15, drawY(enemy.y) + 15, 5, 0, Math.PI * 2);
+                            ctx.arc(screenX + 25, drawY(enemy.y) + 15, 5, 0, Math.PI * 2);
+                            ctx.fill();
+                            ctx.fillStyle = 'black';
+                            ctx.beginPath();
+                            ctx.arc(screenX + 15, drawY(enemy.y) + 15, 2, 0, Math.PI * 2);
+                            ctx.arc(screenX + 25, drawY(enemy.y) + 15, 2, 0, Math.PI * 2);
+                            ctx.fill();
+                            ctx.beginPath();
+                            ctx.arc(screenX + 20, drawY(enemy.y) + 25, 5, 0, Math.PI);
+                            ctx.stroke();
+                            ctx.fillStyle = 'red';
+                            ctx.beginPath();
+                            ctx.arc(screenX + enemy.width/2, drawY(enemy.y) - 10, 12, 0, Math.PI * 2);
+                            ctx.fill();
+                            ctx.fillStyle = 'white';
+                            ctx.font = 'bold 16px Arial';
+                            ctx.textAlign = 'center';
+                            ctx.textBaseline = 'middle';
+                            ctx.fillText('!', screenX + enemy.width/2, drawY(enemy.y) - 10);
+                            ctx.fillStyle = 'black';
+                            ctx.font = 'bold 10px Arial';
+                            ctx.textAlign = 'center';
+                            ctx.fillText(enemyTypes[enemy.type].label, screenX + enemy.width/2, drawY(enemy.y) + enemy.height + 15);
+                        }
+                    }
+                });
+                
+                // Dibujar monedas
+                coins.forEach(coin => {
+                    if (!coin.collected) {
+                        const screenX = drawX(coin.x);
+                        if (screenX + coin.width >= -50 && screenX <= canvas.width + 50) {
+                            ctx.fillStyle = '#FFD700';
+                            ctx.beginPath();
+                            ctx.arc(screenX + coin.width/2, drawY(coin.y) + coin.height/2, coin.width/2, 0, Math.PI * 2);
+                            ctx.fill();
+                            ctx.fillStyle = '#FFFACD';
+                            ctx.beginPath();
+                            ctx.arc(screenX + coin.width/3, drawY(coin.y) + coin.height/3, coin.width/6, 0, Math.PI * 2);
+                            ctx.fill();
+                            ctx.strokeStyle = '#FF8C00';
+                            ctx.lineWidth = 2;
+                            ctx.stroke();
+                        }
+                    }
+                });
+                
+                // Dibujar NPCs de decisión
+                decisionNPCs.forEach((npc, index) => {
+                    const screenX = drawX(npc.x);
+                    if (screenX + npc.width >= -50 && screenX <= canvas.width + 50) {
+                        ctx.fillStyle = npc.color;
+                        ctx.fillRect(screenX, drawY(npc.y), npc.width, npc.height);
+                        ctx.fillStyle = 'white';
+                        ctx.beginPath();
+                        ctx.arc(screenX + 15, drawY(npc.y) + 15, 5, 0, Math.PI * 2);
+                        ctx.arc(screenX + 25, drawY(npc.y) + 15, 5, 0, Math.PI * 2);
+                        ctx.fill();
+                        ctx.fillStyle = 'black';
+                        ctx.beginPath();
+                        ctx.arc(screenX + 15, drawY(npc.y) + 15, 2, 0, Math.PI * 2);
+                        ctx.arc(screenX + 25, drawY(npc.y) + 15, 2, 0, Math.PI * 2);
+                        ctx.fill();
+                        ctx.beginPath();
+                        ctx.arc(screenX + 20, drawY(npc.y) + 25, 5, 0, Math.PI);
+                        ctx.stroke();
+                        if (!npc.completed) {
+                            ctx.fillStyle = '#FFC107';
+                            ctx.beginPath();
+                            ctx.arc(screenX + npc.width/2, drawY(npc.y) - 10, 15, 0, Math.PI * 2);
+                            ctx.fill();
+                            ctx.fillStyle = 'white';
+                            ctx.font = 'bold 18px Arial';
+                            ctx.textAlign = 'center';
+                            ctx.textBaseline = 'middle';
+                            ctx.fillText('?', screenX + npc.width/2, drawY(npc.y) - 10);
+                        }
+                    }
+                });
+                
+                // Dibujar meta
+                if (goal.active) {
+                    const screenX = drawX(goal.x);
+                    if (screenX + goal.width >= -50 && screenX <= canvas.width + 50) {
+                        const timeDiff = Date.now() - goal.activeSince;
+                        const pulse = Math.sin(timeDiff / 200) * 0.5 + 0.5;
+                        ctx.fillStyle = `rgba(76, 175, 80, ${0.7 + pulse * 0.3})`;
+                        ctx.fillRect(screenX, drawY(goal.y), goal.width, goal.height);
+                        ctx.strokeStyle = `rgba(255, 255, 0, ${pulse * 0.7})`;
+                        ctx.lineWidth = 3;
+                        ctx.strokeRect(screenX - 5, drawY(goal.y) - 5, goal.width + 10, goal.height + 10);
+                        ctx.fillStyle = '#8B4513';
+                        ctx.fillRect(screenX + 10, drawY(goal.y) + 15, 20, 25);
+                        ctx.fillStyle = '#FFD700';
+                        ctx.beginPath();
+                        ctx.arc(screenX + 25, drawY(goal.y) + 25, 3, 0, Math.PI * 2);
+                        ctx.fill();
+                        ctx.fillStyle = '#FFEB3B';
+                        ctx.beginPath();
+                        ctx.moveTo(screenX + 20, drawY(goal.y) - 5);
+                        ctx.lineTo(screenX + 23, drawY(goal.y) + 5);
+                        ctx.lineTo(screenX + 33, drawY(goal.y) + 5);
+                        ctx.lineTo(screenX + 25, drawY(goal.y) + 12);
+                        ctx.lineTo(screenX + 28, drawY(goal.y) + 22);
+                        ctx.lineTo(screenX + 20, drawY(goal.y) + 16);
+                        ctx.lineTo(screenX + 12, drawY(goal.y) + 22);
+                        ctx.lineTo(screenX + 15, drawY(goal.y) + 12);
+                        ctx.lineTo(screenX + 7, drawY(goal.y) + 5);
+                        ctx.lineTo(screenX + 17, drawY(goal.y) + 5);
+                        ctx.closePath();
+                        ctx.fill();
+                        ctx.fillStyle = 'white';
+                        ctx.font = 'bold 12px Arial';
+                        ctx.textAlign = 'center';
+                        ctx.fillText('¡META ACTIVADA!', screenX + goal.width/2, drawY(goal.y) - 20);
+                    }
+                }
+                
+                // Dibujar jugador
+                const screenPlayerX = drawX(player.x);
+                const avatar = avatars[game.avatar];
+                let playerColor = avatar.color;
+                if (screenPlayerX + player.width >= -50 && screenPlayerX <= canvas.width + 50) {
+                    // Efectos visuales simplificados para móviles
+                    if (player.glow) {
+                        ctx.shadowColor = avatar.color;
+                        ctx.shadowBlur = 15;
+                    }
+                    if (player.bright) {
+                        playerColor = '#FFFFFF';
+                    }
+                    if (player.dark) {
+                        playerColor = '#333333';
+                    }
+                    
+                    ctx.fillStyle = playerColor;
+                    ctx.fillRect(screenPlayerX, drawY(player.y), player.width, player.height);
+                    
+                    if (player.glow) {
+                        ctx.shadowBlur = 0;
+                        ctx.strokeStyle = avatar.color;
+                        ctx.lineWidth = 3;
+                        ctx.strokeRect(screenPlayerX, drawY(player.y), player.width, player.height);
+                    }
+                    
+                    // Efectos simplificados para móviles
+                    if (player.wobble) {
+                        const offset = Math.sin(Date.now() / 200) * 3;
+                        ctx.fillStyle = playerColor;
+                        ctx.fillRect(screenPlayerX + offset, drawY(player.y), player.width, player.height);
+                    }
+                    if (player.distort) {
+                        const skew = Math.sin(Date.now() / 300) * 10;
+                        ctx.save();
+                        ctx.setTransform(1, 0, skew * 0.01, 1, screenPlayerX, drawY(player.y));
+                        ctx.fillStyle = playerColor;
+                        ctx.fillRect(0, 0, player.width, player.height);
+                        ctx.restore();
+                    }
+                    
+                    // Ojos
+                    ctx.fillStyle = 'white';
+                    ctx.beginPath();
+                    ctx.arc(screenPlayerX + 15, drawY(player.y) + 15, 5, 0, Math.PI * 2);
+                    ctx.arc(screenPlayerX + 25, drawY(player.y) + 15, 5, 0, Math.PI * 2);
+                    ctx.fill();
+                    ctx.fillStyle = 'black';
+                    ctx.beginPath();
+                    ctx.arc(screenPlayerX + 15, drawY(player.y) + 15, 2, 0, Math.PI * 2);
+                    ctx.arc(screenPlayerX + 25, drawY(player.y) + 15, 2, 0, Math.PI * 2);
+                    ctx.fill();
+                    
+                    // Boca
+                    if (attributes.selfesteem > 50) {
+                        ctx.beginPath();
+                        ctx.arc(screenPlayerX + 20, drawY(player.y) + 25, 5, 0, Math.PI);
+                        ctx.stroke();
+                    } else {
+                        ctx.beginPath();
+                        ctx.moveTo(screenPlayerX + 15, drawY(player.y) + 25);
+                        ctx.lineTo(screenPlayerX + 25, drawY(player.y) + 25);
+                        ctx.stroke();
+                    }
+                }
+            }
+        }
+
+        // Bucle del juego
+        function gameLoop() {
+            try {
+                update();
+                draw();
+                gameLoopId = requestAnimationFrame(gameLoop);
+            } catch (error) {
+                console.error('Error en el bucle del juego:', error);
+                // Agregar un mensaje de error visible en pantalla
+                ctx.fillStyle = 'red';
+                ctx.font = '20px Arial';
+                ctx.textAlign = 'center';
+                ctx.fillText('Error en el juego. Reinicie por favor.', canvas.width/2, canvas.height/2);
+                setTimeout(() => {
+                    if (!game.gameOver && !game.gameWon) {
+                        game.gameOver = true;
+                        showGameOver();
+                    }
+                }, 1000);
+            }
+        }
+
+        // Iniciar juego
+        function startGame() {
+            game.started = true;
+            document.getElementById('instructions').style.display = 'none';
+            startBtn.style.display = 'none';
+            restartBtn.style.display = 'inline-block';
+            player.color = avatars[game.avatar].color;
+            generateLevel(game.currentLevel);
+            updateProgressBars();
+            if (!audio.music) {
+                createAudioElements();
+            }
+            if (audio.musicEnabled) {
+                audio.music.play().catch(e => console.log('No se pudo reproducir la música:', e));
+            }
+            gameLoop();
+        }
+
+        // Reiniciar juego
+        function restartGame() {
+            if (gameLoopId){
+			     cancelAnimationFrame(gameLoopId)
+			}
+			
+			game = {
+                started: false,
+                currentLevel: 1,
+                maxLevel: 3,
+                avatar: 'boy1',
+                score: 0,
+                positiveChoices: 0,
+                negativeChoices: 0,
+                totalQuestionsAnswered: 0,
+                levelQuestions: [0, 0, 0],
+                gameOver: false,
+                gameWon: false,
+                inDecision: false,
+                inFeedback: false,
+                cameraX: 0,
+                enemyWarningActive: false,
+                enemyWarningTimer: null
+            };
+            attributes.health = 100;
+            attributes.knowledge = 50;
+            attributes.selfesteem = 70;
+            attributes.money = 40;
+            gameOver.style.display = 'none';
+            gameWon.style.display = 'none';
+            finalForm.style.display = 'none';
+            restartBtn.style.display = 'none';
+            startBtn.style.display = 'inline-block';
+            document.getElementById('instructions').style.display = 'block';
+            decisionBubble.style.display = 'none';
+            feedbackBubble.style.display = 'none';
+            enemyWarning.style.display = 'none';
+            player.x = 100;
+            player.y = 350;
+            player.velX = 0;
+            player.velY = 0;
+            player.width = player.baseWidth;
+            player.height = player.baseHeight;
+            player.currentJumpStrength = player.baseJumpStrength;
+            player.speed = 5;
+            player.glow = false;
+            player.bright = false;
+            player.dark = false;
+            player.blur = false;
+            player.wobble = false;
+            player.distort = false;
+            updateProgressBars();
+            if (audio.music) {
+                audio.music.pause();
+                audio.music.currentTime = 0;
+            }
+            if (game.enemyWarningTimer) {
+                clearTimeout(game.enemyWarningTimer);
+                game.enemyWarningTimer = null;
+            }
+        }
+
+        // Inicializar
+        updateProgressBars();
+        startBtn.style.display = 'inline-block'; // Mostrar el botón de inicio al cargar
+    </script>
+</body>
+</html>
