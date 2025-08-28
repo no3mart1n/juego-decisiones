@@ -832,8 +832,9 @@
                     topic: "Estilos de Vida Saludable",
                     options: [
                         { text: "Acepto, todos lo están haciendo", impact: { health: -20, selfesteem: -10, money: -20 }, type: "negative", effect: "reduceSize" },
-                        { text: "Rechazo amablemente, prefiero mantenerme claro", impact: { selfesteem: +15, knowledge: +10, money: +10 }, type: "positive", effect: "increaseJump" },
-                        { text: "No sé, tal vez un poco", impact: { health: -10, selfesteem: -5, money: -10 }, type: "negative", effect: "reduceJump" }
+					 	{ text: "No sé, tal vez un poco", impact: { health: -10, selfesteem: -5, money: -10 }, type: "negative", effect: "reduceJump" },
+                        { text: "Rechazo amablemente, prefiero mantenerme claro", impact: { selfesteem: +15, knowledge: +10, money: +10 }, type: "positive", effect: "increaseJump" }
+                       
                     ]
                 },
                 {
@@ -849,8 +850,8 @@
                     question: "Tienes un examen importante mañana, pero tus amigos te invitan a salir. ¿Qué decides?",
                     topic: "Proyecto de Vida",
                     options: [
+						{ text: "Les agradezco pero me quedo estudiando para mi futuro", impact: { knowledge: +20, selfesteem: +10, money: +25 }, type: "positive", effect: "increaseSize" },
                         { text: "Voy con mis amigos, el examen no es tan importante", impact: { knowledge: -15, money: -10 }, type: "negative", effect: "reduceSpeed" },
-                        { text: "Les agradezco pero me quedo estudiando para mi futuro", impact: { knowledge: +20, selfesteem: +10, money: +25 }, type: "positive", effect: "increaseSize" },
                         { text: "Voy un rato corto y luego estudio", impact: { knowledge: +5, selfesteem: -5, money: +5 }, type: "negative", effect: "wobble" }
                     ]
                 },
@@ -867,8 +868,8 @@
                     question: "Un compañero te hace un comentario ofensivo sobre tu apariencia. ¿Cómo respondes?",
                     topic: "Autoestima",
                     options: [
+						{ text: "Le digo con firmeza que ese comentario no es adecuado", impact: { selfesteem: +20, knowledge: +10, money: +25 }, type: "positive", effect: "expand" },
                         { text: "Me quedo callado por miedo a que se burlen más", impact: { selfesteem: -15, money: -20 }, type: "negative", effect: "shrink" },
-                        { text: "Le digo con firmeza que ese comentario no es adecuado", impact: { selfesteem: +20, knowledge: +10, money: +25 }, type: "positive", effect: "expand" },
                         { text: "Le respondo con otro comentario ofensivo", impact: { selfesteem: -10, knowledge: -5, money: -15 }, type: "negative", effect: "distort" }
                     ]
                 }
@@ -888,8 +889,8 @@
                     topic: "Métodos de Anticoncepción",
                     options: [
                         { text: "Pastillas anticonceptivas", impact: { knowledge: -10, money: -15 }, type: "negative", effect: "darken" },
-                        { text: "Condón masculino", impact: { knowledge: +25, health: +10, money: +25 }, type: "positive", effect: "brighten" },
-                        { text: "Implante hormonal", impact: { knowledge: -5, money: -10 }, type: "negative", effect: "blur" }
+                        { text: "Implante hormonal", impact: { knowledge: -5, money: -10 }, type: "negative", effect: "blur" },
+						 { text: "Condón masculino", impact: { knowledge: +25, health: +10, money: +25 }, type: "positive", effect: "brighten" }
                     ]
                 },
                 {
@@ -906,16 +907,16 @@
                     topic: "Salud Sexual",
                     options: [
                         { text: "Aceptar por miedo a perder a la pareja", impact: { knowledge: -15, money: -20 }, type: "negative", effect: "reduceJump" },
-                        { text: "Dar permiso libre, informado y reversible en cualquier momento", impact: { knowledge: +25, selfesteem: +10, money: +30 }, type: "positive", effect: "increaseJump" },
-                        { text: "Solo es necesario la primera vez", impact: { knowledge: -10, money: -10 }, type: "negative", effect: "wobble" }
+                        { text: "Solo es necesario la primera vez", impact: { knowledge: -10, money: -10 }, type: "negative", effect: "wobble" },
+					 	{ text: "Dar permiso libre, informado y reversible en cualquier momento", impact: { knowledge: +25, selfesteem: +10, money: +30 }, type: "positive", effect: "increaseJump" }
                     ]
                 },
                 {
                     question: "Tu mejor amigo te dice que es homosexual y teme contárselo a su familia. ¿Qué haces?",
                     topic: "Diversidad",
                     options: [
+						{ text: "Lo apoyo y lo ayudo a preparar cómo contarlo a su familia", impact: { selfesteem: +25, knowledge: +20, money: +25 }, type: "positive", effect: "glow" },
                         { text: "Le digo que está mal y que debería cambiar", impact: { selfesteem: -25, knowledge: -15, money: -30 }, type: "negative", effect: "darken" },
-                        { text: "Lo apoyo y lo ayudo a preparar cómo contarlo a su familia", impact: { selfesteem: +25, knowledge: +20, money: +25 }, type: "positive", effect: "glow" },
                         { text: "Me alejo porque no entiendo su situación", impact: { selfesteem: -15, knowledge: -5, money: -20 }, type: "negative", effect: "blur" }
                     ]
                 }
@@ -943,8 +944,8 @@
                     question: "¿Qué significa realmente la igualdad de género en las relaciones?",
                     topic: "Igualdad",
                     options: [
+						{ text: "Que ambos miembros de la relación tienen los mismos derechos, deberes y oportunidades", impact: { knowledge: +25, selfesteem: +10, money: +25 }, type: "positive", effect: "brighten" },
                         { text: "Que los hombres toman las decisiones importantes", impact: { knowledge: -15, money: -20 }, type: "negative", effect: "darken" },
-                        { text: "Que ambos miembros de la relación tienen los mismos derechos, deberes y oportunidades", impact: { knowledge: +25, selfesteem: +10, money: +25 }, type: "positive", effect: "brighten" },
                         { text: "Que las mujeres deben obedecer a los hombres", impact: { knowledge: -20, money: -25 }, type: "negative", effect: "blur" }
                     ]
                 },
@@ -953,16 +954,16 @@
                     topic: "Relaciones Saludables",
                     options: [
                         { text: "Acepto, si me ama tiene derecho a saber", impact: { selfesteem: -25, health: -15, money: -30 }, type: "negative", effect: "distort" },
-                        { text: "Le explico que necesito mi espacio y libertad", impact: { selfesteem: +20, knowledge: +15, money: +20 }, type: "positive", effect: "glow" },
-                        { text: "No digo nada por miedo a que se enoje", impact: { selfesteem: -15, knowledge: -5, money: -15 }, type: "negative", effect: "wobble" }
+                        { text: "No digo nada por miedo a que se enoje", impact: { selfesteem: -15, knowledge: -5, money: -15 }, type: "negative", effect: "wobble" },
+						{ text: "Le explico que necesito mi espacio y libertad", impact: { selfesteem: +20, knowledge: +15, money: +20 }, type: "positive", effect: "glow" }
                     ]
                 },
                 {
                     question: "Has completado tu educación básica y estás decidiendo tu próximo paso. ¿Qué eliges?",
                     topic: "Proyecto de Vida",
                     options: [
+						{ text: "Investigar opciones educativas y de carrera que se ajusten a mis intereses", impact: { knowledge: +25, selfesteem: +15, money: +40 }, type: "positive", effect: "increaseSize" },
                         { text: "Trabajar en lo primero que encuentre sin planificar", impact: { knowledge: -10, money: +10 }, type: "negative", effect: "shrink" },
-                        { text: "Investigar opciones educativas y de carrera que se ajusten a mis intereses", impact: { knowledge: +25, selfesteem: +15, money: +40 }, type: "positive", effect: "increaseSize" },
                         { text: "Dependeré de lo que decidan mis padres", impact: { selfesteem: -10, knowledge: -5, money: -5 }, type: "negative", effect: "darken" }
                     ]
                 }
@@ -1381,7 +1382,7 @@ function resizeCanvas() {
             const feedbackTexts = {
                 "Estilos de Vida Saludable": [
                     "Las drogas pueden afectar tu desarrollo cerebral y tu salud a largo plazo. Saber decir no es una habilidad importante.",
-                    "El ejercicio regular, una alimentación balanceada y un buen descanso son fundamentales para tu bienestar físico y mental.",
+                    "El ejercicio regular, la alimentación balanceada, el buen descanso y evitar el consumo de drogas son fundamentales para tu bienestar físico y mental.",
                     "Dormir lo suficiente y limitar el tiempo de pantalla ayuda a mejorar tu concentración, estado de ánimo y salud general."
                 ],
                 "Autoestima": [
@@ -1402,32 +1403,32 @@ function resizeCanvas() {
                 "Métodos de Anticoncepción": [
                     "El condón es el único método anticonceptivo que también previene enfermedades de transmisión sexual.",
                     "Conocer los diferentes métodos anticonceptivos te permite tomar decisiones informadas sobre tu salud reproductiva.",
-                    "La planificación familiar responsable permite a las personas decidir si, cuándo y cuántos hijos tener."
+                    "El uso de metodos anticoncepticos es una manera responsable de tener relaciones sexuales."
                 ],
                 "Salud Reproductiva": [
                     "Escuchar sin juzgar y ofrecer apoyo emocional es la mejor forma de ayudar a alguien que atraviesa una situación difícil.",
                     "Todas las personas tienen derecho a recibir información y servicios de salud reproductiva con respeto y sin discriminación.",
-                    "El apoyo social y emocional es crucial para la salud mental de quienes enfrentan decisiones complejas sobre su cuerpo y vida."
+                    "El apoyo social y emocional es crucial para la salud mental de quienes enfrentan situaciones complejas."
                 ],
                 "Salud Sexual": [
-                    "Escuchar sin juzgar y ofrecer apoyo emocional es la mejor forma de ayudar a alguien que atraviesa una situación difícil.",
-                    "Todas las personas tienen derecho a recibir información y servicios de salud reproductiva con respeto y sin discriminación.",
-                    "El apoyo social y emocional es crucial para la salud mental de quienes enfrentan decisiones complejas sobre su cuerpo y vida."
+                    "El verdadero consentimiento unca debe darse por presión, manipulación, miedo a decepcionar o por sentirse obligado.",
+                    "Una relación sana se basa en que ambas personas se sientan cómodas y libres para expresar sus deseos y límites sin presiones.",
+                    "Siempre se tiene el derecho de cambiar de opinión y detener cualquier actividad, sin importar lo que haya pasado antes."
                 ],
                 "Diversidad": [
                     "Apoyar la identidad de tus amigos fortalece la amistad y promueve un entorno inclusivo y respetuoso.",
-                    "La diversidad sexual y de género es parte natural de la humanidad. El respeto a todas las identidades es fundamental.",
-                    "Ayudar a otros a comunicar sus verdades personal fortalece los vínculos y promueve la aceptación."
+                    "La diversidad sexual es parte de la humanidad y el respeto a todas las identidades es fundamental.",
+                    "Ayudar a otros a comunicar sus verdades personales fortalece los vínculos y promueve la aceptación."
                 ],
                 "Embarazo": [
                     "Juzgar a quienes enfrentan un embarazo no planificado no ayuda. Lo importante es el apoyo y la información.",
-                    "Las personas que enfrentan un embarazo no planificado necesitan apoyo emocional, información y opciones sin juicios.",
+                    "Las personas que enfrentan un embarazo no planificado necesitan apoyo emocional y mucha información sin juicios.",
                     "El apoyo incondicional y la orientación profesional son clave para que las personas tomen decisiones informadas sobre su maternidad."
                 ],
                 "Igualdad": [
                     "La igualdad de género significa que todas las personas, sin importar su género, tienen los mismos derechos y oportunidades.",
                     "En relaciones saludables, las decisiones se toman en conjunto, con respeto mutuo y equidad en responsabilidades.",
-                    "Romper con estereotipos de género permite a las personas desarrollarse plenamente según sus intereses y capacidades, no según expectativas sociales."
+                    "Todas las personas tienen derecho a desarrollarse plenamente según sus intereses y capacidades, no necesariamente por expectativas sociales."
                 ],
                 "Relaciones Saludables": [
                     "Controlar a tu pareja es una forma de violencia. En relaciones saludables, ambos tienen libertad y autonomía.",
@@ -2225,5 +2226,6 @@ function resizeCanvas() {
 </body>
 
 </html>
+
 
 
