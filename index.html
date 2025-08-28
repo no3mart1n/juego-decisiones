@@ -894,10 +894,10 @@
                     ]
                 },
                 {
-                    question: "Una amiga te confiesa que está التفكير abortar. ¿Cómo reaccionas?",
+                    question: "Una amiga te confiesa que está embarazada y que tiene miedo a tener un bebé. ¿Cómo reaccionas?",
                     topic: "Salud Reproductiva",
                     options: [
-                        { text: "La juzgo y le digo que es una mala persona", impact: { selfesteem: -20, knowledge: -10, money: -25 }, type: "negative", effect: "distort" },
+                        { text: "La juzgo y le digo que es una persona irresponsable", impact: { selfesteem: -20, knowledge: -10, money: -25 }, type: "negative", effect: "distort" },
                         { text: "La escucho sin juzgar y le ofrezco apoyo emocional", impact: { selfesteem: +20, knowledge: +15, money: +20 }, type: "positive", effect: "expand" },
                         { text: "Me alejo porque no quiero problemas", impact: { selfesteem: -15, knowledge: -5, money: -15 }, type: "negative", effect: "shrink" }
                     ]
@@ -1442,7 +1442,6 @@ function resizeCanvas() {
             feedbackContent.textContent = feedbackText;
 			
             setTimeout(() => {
-                console.log('Feedback oculto para', topic, 'en', Date.now());
                 feedbackBubble.style.display = 'none';
                 game.inFeedback = false;  // ¡Esta línea es crucial para que el juego continúe!
             }, 4000);
@@ -2226,6 +2225,7 @@ function resizeCanvas() {
 </body>
 
 </html>
+
 
 
 
