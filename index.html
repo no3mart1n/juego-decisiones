@@ -1434,11 +1434,23 @@ function resizeCanvas() {
             const randomIndex = Math.floor(Math.random() * topicFeedbacks.length);
             const feedbackText = topicFeedbacks[randomIndex];
             feedbackContent.textContent = feedbackText;
-            setTimeout(() => {
-                console.log('Feedback oculto para', topic, 'en', Date.now());
-                feedbackBubble.style.display = 'none';
-                game.inFeedback = false;  // ¡Esta línea es crucial para que el juego continúe!
-            }, 4000);
+
+			// aqui se agrego una variable especifica para este temporizador si alguno esta corriendo lo vamos a cancelar y lo volvemos a abrir, para asegurarnos de que va a finalizar a los 4 seg. 
+		    if (window.feedbackTimeout) {
+		        clearTimeout(window.feedbackTimeout);
+		    }
+		    window.feedbackTimeout = setTimeout(() => {
+		        feedbackBubble.style.display = 'none';
+		        game.inFeedback = false;
+		    }, 4000);
+
+
+			
+            //setTimeout(() => {
+              //  console.log('Feedback oculto para', topic, 'en', Date.now());
+              //  feedbackBubble.style.display = 'none';
+              //  game.inFeedback = false;  // ¡Esta línea es crucial para que el juego continúe!
+            //}, 4000);
         }
 
         // Generar nivel
@@ -2219,4 +2231,5 @@ function resizeCanvas() {
 </body>
 
 </html>
+
 
