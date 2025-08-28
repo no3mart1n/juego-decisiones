@@ -1366,25 +1366,7 @@ function resizeCanvas() {
         // Mostrar burbuja de feedback
         function showFeedbackBubble(npc, topic) {
             game.inFeedback = true;
-            //-----
-                let bubbleX, bubbleY;
-            if (isMobileDevice()) {
-                bubbleX = (canvas.width - 300) / 2;
-                bubbleY = canvas.height / 4;
-            } else {
-                const npcScreenX = npc.x - game.cameraX;
-                const npcScreenY = npc.y;
-                bubbleX = npcScreenX - 150 + (canvas.width / 2);
-                bubbleY = npcScreenY - 120;
-               
-                if (bubbleX < 10) bubbleX = 10;
-                else if (bubbleX + 300 > canvas.width - 10) bubbleX = canvas.width - 310;
-                
-                if (bubbleY < 50) bubbleY = npcScreenY + 60;
-                else if (bubbleY + 100 > canvas.height - 10) bubbleY = npcScreenY - 100;
-            }
-
-            //---
+        
             // const npcScreenX = npc.x - game.cameraX;
             // const npcScreenY = npc.y;
             // let bubbleX = npcScreenX - 150 + (canvas.width / 2);
@@ -1393,6 +1375,9 @@ function resizeCanvas() {
             // else if (bubbleX + 300 > canvas.width - 10) bubbleX = canvas.width - 310;
             // if (bubbleY < 50) bubbleY = npcScreenY + 60;
             // else if (bubbleY + 100 > canvas.height - 10) bubbleY = npcScreenY - 100;
+                // Centrar la burbuja SIEMPRE (desktop y móvil)
+            let bubbleX = (canvas.width - 300) / 2;
+            let bubbleY = canvas.height / 4;
 
             feedbackBubble.style.left = bubbleX + 'px';
             feedbackBubble.style.top = bubbleY + 'px';
