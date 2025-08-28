@@ -1365,20 +1365,16 @@ function resizeCanvas() {
 
         // Mostrar burbuja de feedback
         function showFeedbackBubble(npc, topic) {
+            console.log('Feedback mostrado para', topic, 'en', Date.now());
             game.inFeedback = true;
-        
-            // const npcScreenX = npc.x - game.cameraX;
-            // const npcScreenY = npc.y;
-            // let bubbleX = npcScreenX - 150 + (canvas.width / 2);
-            // let bubbleY = npcScreenY - 120;
-            // if (bubbleX < 10) bubbleX = 10;
-            // else if (bubbleX + 300 > canvas.width - 10) bubbleX = canvas.width - 310;
-            // if (bubbleY < 50) bubbleY = npcScreenY + 60;
-            // else if (bubbleY + 100 > canvas.height - 10) bubbleY = npcScreenY - 100;
-                // Centrar la burbuja SIEMPRE (desktop y móvil)
-            let bubbleX = (canvas.width - 300) / 2;
-            let bubbleY = canvas.height / 4;
-
+            const npcScreenX = npc.x - game.cameraX;
+            const npcScreenY = npc.y;
+            let bubbleX = npcScreenX - 150 + (canvas.width / 2);
+            let bubbleY = npcScreenY - 120;
+            if (bubbleX < 10) bubbleX = 10;
+            else if (bubbleX + 300 > canvas.width - 10) bubbleX = canvas.width - 310;
+            if (bubbleY < 50) bubbleY = npcScreenY + 60;
+            else if (bubbleY + 100 > canvas.height - 10) bubbleY = npcScreenY - 100;
             feedbackBubble.style.left = bubbleX + 'px';
             feedbackBubble.style.top = bubbleY + 'px';
             feedbackBubble.style.display = 'block';
@@ -1409,7 +1405,7 @@ function resizeCanvas() {
                     "La planificación familiar responsable permite a las personas decidir si, cuándo y cuántos hijos tener."
                 ],
                 "Salud Reproductiva": [
-                    "Escuchart sin juzgar y ofrecer apoyo emocional es la mejor forma de ayudar a alguien que atraviesa una situación difícil.",
+                    "Escuchar sin juzgar y ofrecer apoyo emocional es la mejor forma de ayudar a alguien que atraviesa una situación difícil.",
                     "Todas las personas tienen derecho a recibir información y servicios de salud reproductiva con respeto y sin discriminación.",
                     "El apoyo social y emocional es crucial para la salud mental de quienes enfrentan decisiones complejas sobre su cuerpo y vida."
                 ],
@@ -1438,20 +1434,12 @@ function resizeCanvas() {
             const randomIndex = Math.floor(Math.random() * topicFeedbacks.length);
             const feedbackText = topicFeedbacks[randomIndex];
             feedbackContent.textContent = feedbackText;
-            // Limpia cualquier timeout anterior
-            if (feedbackBubble._timeout) clearTimeout(feedbackBubble._timeout);
-
-            feedbackBubble._timeout = setTimeout(() => {
-            feedbackBubble.style.display = 'none';
-            game.inFeedback = false;
+            setTimeout(() => {
+                console.log('Feedback oculto para', topic, 'en', Date.now());
+                feedbackBubble.style.display = 'none';
+                game.inFeedback = false;  // ¡Esta línea es crucial para que el juego continúe!
             }, 4000);
-            }
-        
-            //     setTimeout(() => {
-        //         feedbackBubble.style.display = 'none';
-        //         game.inFeedback = false;  // ¡Esta línea es crucial para que el juego continúe!
-        //     }, 4000);
-        // }
+        }
 
         // Generar nivel
         function generateLevel(level) {
