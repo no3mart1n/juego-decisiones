@@ -1366,14 +1366,34 @@ function resizeCanvas() {
         // Mostrar burbuja de feedback
         function showFeedbackBubble(npc, topic) {
             game.inFeedback = true;
-            const npcScreenX = npc.x - game.cameraX;
-            const npcScreenY = npc.y;
-            let bubbleX = npcScreenX - 150 + (canvas.width / 2);
-            let bubbleY = npcScreenY - 120;
-            if (bubbleX < 10) bubbleX = 10;
-            else if (bubbleX + 300 > canvas.width - 10) bubbleX = canvas.width - 310;
-            if (bubbleY < 50) bubbleY = npcScreenY + 60;
-            else if (bubbleY + 100 > canvas.height - 10) bubbleY = npcScreenY - 100;
+            //-----
+                let bubbleX, bubbleY;
+            if (isMobileDevice()) {
+                bubbleX = (canvas.width - 300) / 2;
+                bubbleY = canvas.height / 4;
+            } else {
+                const npcScreenX = npc.x - game.cameraX;
+                const npcScreenY = npc.y;
+                bubbleX = npcScreenX - 150 + (canvas.width / 2);
+                bubbleY = npcScreenY - 120;
+               
+                if (bubbleX < 10) bubbleX = 10;
+                else if (bubbleX + 300 > canvas.width - 10) bubbleX = canvas.width - 310;
+                
+                if (bubbleY < 50) bubbleY = npcScreenY + 60;
+                else if (bubbleY + 100 > canvas.height - 10) bubbleY = npcScreenY - 100;
+            }
+
+            //---
+            // const npcScreenX = npc.x - game.cameraX;
+            // const npcScreenY = npc.y;
+            // let bubbleX = npcScreenX - 150 + (canvas.width / 2);
+            // let bubbleY = npcScreenY - 120;
+            // if (bubbleX < 10) bubbleX = 10;
+            // else if (bubbleX + 300 > canvas.width - 10) bubbleX = canvas.width - 310;
+            // if (bubbleY < 50) bubbleY = npcScreenY + 60;
+            // else if (bubbleY + 100 > canvas.height - 10) bubbleY = npcScreenY - 100;
+
             feedbackBubble.style.left = bubbleX + 'px';
             feedbackBubble.style.top = bubbleY + 'px';
             feedbackBubble.style.display = 'block';
@@ -1433,11 +1453,20 @@ function resizeCanvas() {
             const randomIndex = Math.floor(Math.random() * topicFeedbacks.length);
             const feedbackText = topicFeedbacks[randomIndex];
             feedbackContent.textContent = feedbackText;
-            setTimeout(() => {
-                feedbackBubble.style.display = 'none';
-                game.inFeedback = false;  // ¡Esta línea es crucial para que el juego continúe!
+            // Limpia cualquier timeout anterior
+            if (feedbackBubble._timeout) clearTimeout(feedbackBubble._timeout);
+
+            feedbackBubble._timeout = setTimeout(() => {
+            feedbackBubble.style.display = 'none';
+            game.inFeedback = false;
             }, 4000);
-        }
+            }
+        
+            //     setTimeout(() => {
+        //         feedbackBubble.style.display = 'none';
+        //         game.inFeedback = false;  // ¡Esta línea es crucial para que el juego continúe!
+        //     }, 4000);
+        // }
 
         // Generar nivel
         function generateLevel(level) {
