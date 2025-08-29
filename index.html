@@ -2045,73 +2045,167 @@ function resizeCanvas() {
                         ctx.fillText('¡META ACTIVADA!', screenX + goal.width/2, drawY(goal.y) - 20);
                     }
                 }
-                
-                // Dibujar jugador
+                    // ...dentro de la función draw(), donde se dibuja el jugador...
                 const screenPlayerX = drawX(player.x);
                 const avatar = avatars[game.avatar];
-                let playerColor = avatar.color;
                 if (screenPlayerX + player.width >= -50 && screenPlayerX <= canvas.width + 50) {
-                    // Efectos visuales simplificados para móviles
-                    if (player.glow) {
-                        ctx.shadowColor = avatar.color;
-                        ctx.shadowBlur = 15;
-                    }
-                    if (player.bright) {
-                        playerColor = '#FFFFFF';
-                    }
-                    if (player.dark) {
-                        playerColor = '#333333';
-                    }
+                    // Parámetros básicos
+                    const px = screenPlayerX + player.width / 2;
+                    const py = drawY(player.y) + player.height / 2;
+                    const headRadius = player.width * 0.32;
+                    const bodyLength = player.height * 0.45;
+                    const armLength = player.width * 0.7;
+                    const legLength = player.height * 0.45;
+
+    // Efectos visuales (glow, bright, dark)
+    ctx.save();
+    if (player.glow) {
+        ctx.shadowColor = avatar.color;
+        ctx.shadowBlur = 15;
+    }
+    let skinColor = "#f7d7b6";
+    let shirtColor = "#2196F3";
+    let pantsColor = "#444";
+    let shoeColor = "#222";
+    if (player.bright) shirtColor = "#fff";
+    if (player.dark) shirtColor = "#333";
+
+    // Cabeza
+    ctx.beginPath();
+    ctx.arc(px, py - bodyLength/1.2, headRadius, 0, Math.PI * 2);
+    ctx.fillStyle = skinColor;
+    ctx.fill();
+    ctx.strokeStyle = "#b48a78";
+    ctx.lineWidth = 2;
+    ctx.stroke();
+
+    // Cuerpo (camiseta)
+    ctx.beginPath();
+    ctx.moveTo(px, py - bodyLength/1.2 + headRadius);
+    ctx.lineTo(px, py + bodyLength/2);
+    ctx.strokeStyle = shirtColor;
+    ctx.lineWidth = 7;
+    ctx.stroke();
+
+    // Brazos
+    ctx.beginPath();
+    ctx.moveTo(px, py - bodyLength/2 + 5);
+    ctx.lineTo(px - armLength/2, py);
+    ctx.moveTo(px, py - bodyLength/2 + 5);
+    ctx.lineTo(px + armLength/2, py);
+    ctx.strokeStyle = shirtColor;
+    ctx.lineWidth = 5;
+    ctx.stroke();
+
+    // Piernas
+    ctx.beginPath();
+    ctx.moveTo(px, py + bodyLength/2);
+    ctx.lineTo(px - armLength/3, py + bodyLength/2 + legLength);
+    ctx.moveTo(px, py + bodyLength/2);
+    ctx.lineTo(px + armLength/3, py + bodyLength/2 + legLength);
+    ctx.strokeStyle = pantsColor;
+    ctx.lineWidth = 6;
+    ctx.stroke();
+
+    // Zapatos
+    ctx.beginPath();
+    ctx.arc(px - armLength/3, py + bodyLength/2 + legLength, 5, 0, Math.PI * 2);
+    ctx.arc(px + armLength/3, py + bodyLength/2 + legLength, 5, 0, Math.PI * 2);
+    ctx.fillStyle = shoeColor;
+    ctx.fill();
+
+    // Cara (ojos y boca)
+    ctx.beginPath();
+    ctx.arc(px - 7, py - bodyLength/1.2 - 2, 2, 0, Math.PI * 2); // ojo izq
+    ctx.arc(px + 7, py - bodyLength/1.2 - 2, 2, 0, Math.PI * 2); // ojo der
+    ctx.fillStyle = "#222";
+    ctx.fill();
+
+    // Boca (sonrisa o línea)
+    ctx.beginPath();
+    if (attributes.selfesteem > 50) {
+        ctx.arc(px, py - bodyLength/1.2 + 7, 7, 0, Math.PI, false);
+    } else {
+        ctx.moveTo(px - 5, py - bodyLength/1.2 + 10);
+        ctx.lineTo(px + 5, py - bodyLength/1.2 + 10);
+    }
+    ctx.strokeStyle = "#b48a78";
+    ctx.lineWidth = 2;
+    ctx.stroke();
+
+    ctx.restore();
+}
+// ...resto del código...
+
+
+
+
+                // // Dibujar jugador
+                // const screenPlayerX = drawX(player.x);
+                // const avatar = avatars[game.avatar];
+                // let playerColor = avatar.color;
+                // if (screenPlayerX + player.width >= -50 && screenPlayerX <= canvas.width + 50) {
+                //     // Efectos visuales simplificados para móviles
+                //     if (player.glow) {
+                //         ctx.shadowColor = avatar.color;
+                //         ctx.shadowBlur = 15;
+                //     }
+                //     if (player.bright) {
+                //         playerColor = '#FFFFFF';
+                //     }
+                //     if (player.dark) {
+                //         playerColor = '#333333';
+                //     }
                     
-                    ctx.fillStyle = playerColor;
-                    ctx.fillRect(screenPlayerX, drawY(player.y), player.width, player.height);
+                //     ctx.fillStyle = playerColor;
+                //     ctx.fillRect(screenPlayerX, drawY(player.y), player.width, player.height);
                     
-                    if (player.glow) {
-                        ctx.shadowBlur = 0;
-                        ctx.strokeStyle = avatar.color;
-                        ctx.lineWidth = 3;
-                        ctx.strokeRect(screenPlayerX, drawY(player.y), player.width, player.height);
-                    }
+                //     if (player.glow) {
+                //         ctx.shadowBlur = 0;
+                //         ctx.strokeStyle = avatar.color;
+                //         ctx.lineWidth = 3;
+                //         ctx.strokeRect(screenPlayerX, drawY(player.y), player.width, player.height);
+                //     }
                     
-                    // Efectos simplificados para móviles
-                    if (player.wobble) {
-                        const offset = Math.sin(Date.now() / 200) * 3;
-                        ctx.fillStyle = playerColor;
-                        ctx.fillRect(screenPlayerX + offset, drawY(player.y), player.width, player.height);
-                    }
-                    if (player.distort) {
-                        const skew = Math.sin(Date.now() / 300) * 10;
-                        ctx.save();
-                        ctx.setTransform(1, 0, skew * 0.01, 1, screenPlayerX, drawY(player.y));
-                        ctx.fillStyle = playerColor;
-                        ctx.fillRect(0, 0, player.width, player.height);
-                        ctx.restore();
-                    }
+                //     // Efectos simplificados para móviles
+                //     if (player.wobble) {
+                //         const offset = Math.sin(Date.now() / 200) * 3;
+                //         ctx.fillStyle = playerColor;
+                //         ctx.fillRect(screenPlayerX + offset, drawY(player.y), player.width, player.height);
+                //     }
+                //     if (player.distort) {
+                //         const skew = Math.sin(Date.now() / 300) * 10;
+                //         ctx.save();
+                //         ctx.setTransform(1, 0, skew * 0.01, 1, screenPlayerX, drawY(player.y));
+                //         ctx.fillStyle = playerColor;
+                //         ctx.fillRect(0, 0, player.width, player.height);
+                //         ctx.restore();
+                //     }
                     
-                    // Ojos
-                    ctx.fillStyle = 'white';
-                    ctx.beginPath();
-                    ctx.arc(screenPlayerX + 15, drawY(player.y) + 15, 5, 0, Math.PI * 2);
-                    ctx.arc(screenPlayerX + 25, drawY(player.y) + 15, 5, 0, Math.PI * 2);
-                    ctx.fill();
-                    ctx.fillStyle = 'black';
-                    ctx.beginPath();
-                    ctx.arc(screenPlayerX + 15, drawY(player.y) + 15, 2, 0, Math.PI * 2);
-                    ctx.arc(screenPlayerX + 25, drawY(player.y) + 15, 2, 0, Math.PI * 2);
-                    ctx.fill();
+                //     // Ojos
+                //     ctx.fillStyle = 'white';
+                //     ctx.beginPath();
+                //     ctx.arc(screenPlayerX + 15, drawY(player.y) + 15, 5, 0, Math.PI * 2);
+                //     ctx.arc(screenPlayerX + 25, drawY(player.y) + 15, 5, 0, Math.PI * 2);
+                //     ctx.fill();
+                //     ctx.fillStyle = 'black';
+                //     ctx.beginPath();
+                //     ctx.arc(screenPlayerX + 15, drawY(player.y) + 15, 2, 0, Math.PI * 2);
+                //     ctx.arc(screenPlayerX + 25, drawY(player.y) + 15, 2, 0, Math.PI * 2);
+                //     ctx.fill();
                     
-                    // Boca
-                    if (attributes.selfesteem > 50) {
-                        ctx.beginPath();
-                        ctx.arc(screenPlayerX + 20, drawY(player.y) + 25, 5, 0, Math.PI);
-                        ctx.stroke();
-                    } else {
-                        ctx.beginPath();
-                        ctx.moveTo(screenPlayerX + 15, drawY(player.y) + 25);
-                        ctx.lineTo(screenPlayerX + 25, drawY(player.y) + 25);
-                        ctx.stroke();
-                    }
-                }
+                //     // Boca
+                //     if (attributes.selfesteem > 50) {
+                //         ctx.beginPath();
+                //         ctx.arc(screenPlayerX + 20, drawY(player.y) + 25, 5, 0, Math.PI);
+                //         ctx.stroke();
+                //     } else {
+                //         ctx.beginPath();
+                //         ctx.moveTo(screenPlayerX + 15, drawY(player.y) + 25);
+                //         ctx.lineTo(screenPlayerX + 25, drawY(player.y) + 25);
+                //         ctx.stroke();
+                //     }
+                // }
             }
         }
 
