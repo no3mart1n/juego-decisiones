@@ -660,7 +660,7 @@
             <button id="actionBtn" class="mobile-btn action-btn">ACCIÓN</button>
         </div>
     </div>
-<img id="playerSprite" src="elf.png" style="display:none;">
+
     <script>
         let gameLoopId = null;  
 	   // Elementos del DOM
@@ -2047,28 +2047,16 @@ function resizeCanvas() {
                 }
                 // Dibujar jugador con avatar personalizado    
                 // ...dentro de la función draw(), donde se dibuja el jugador...
-                // ...jugador elfo
-const screenPlayerX = drawX(player.x);
-if (screenPlayerX + player.width >= -50 && screenPlayerX <= canvas.width + 50) {
-    const playerImg = document.getElementById('playerSprite');
-    if (playerImg.complete && playerImg.naturalWidth > 0) {
-        ctx.drawImage(playerImg, screenPlayerX, drawY(player.y), player.width, player.height);
-    } else {
-        // Si la imagen no está cargada, dibuja un rectángulo de respaldo
-        ctx.fillStyle = "#2196F3";
-        ctx.fillRect(screenPlayerX, drawY(player.y), player.width, player.height);
-    }
-
-                // const screenPlayerX = drawX(player.x);
-                // const avatar = avatars[game.avatar];
-                // if (screenPlayerX + player.width >= -50 && screenPlayerX <= canvas.width + 50) {
-                //     // Parámetros básicos
-                //     const px = screenPlayerX + player.width / 2;
-                //     const py = drawY(player.y) + player.height / 2;
-                //     const headRadius = player.width * 0.32;
-                //     const bodyLength = player.height * 0.45;
-                //     const armLength = player.width * 0.7;
-                //     const legLength = player.height * 0.45;
+                const screenPlayerX = drawX(player.x);
+                const avatar = avatars[game.avatar];
+                if (screenPlayerX + player.width >= -50 && screenPlayerX <= canvas.width + 50) {
+                    // Parámetros básicos
+                    const px = screenPlayerX + player.width / 2;
+                    const py = drawY(player.y) + player.height / 2;
+                    const headRadius = player.width * 0.32;
+                    const bodyLength = player.height * 0.45;
+                    const armLength = player.width * 0.7;
+                    const legLength = player.height * 0.45;
     
     
     // Efectos visuales (glow, bright, dark)
@@ -2077,7 +2065,7 @@ if (screenPlayerX + player.width >= -50 && screenPlayerX <= canvas.width + 50) {
         ctx.shadowColor = avatar.color;
         ctx.shadowBlur = 15;
     }
-    let skinColor = "Black";
+    let skinColor = "#f7d7b6";
     let shirtColor = "#2196F3";
     let pantsColor = "#444";
     let shoeColor = "#222";
