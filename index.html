@@ -2045,7 +2045,8 @@ function resizeCanvas() {
                         ctx.fillText('¡META ACTIVADA!', screenX + goal.width/2, drawY(goal.y) - 20);
                     }
                 }
-                    // ...dentro de la función draw(), donde se dibuja el jugador...
+                // Dibujar jugador con avatar personalizado    
+                // ...dentro de la función draw(), donde se dibuja el jugador...
                 const screenPlayerX = drawX(player.x);
                 const avatar = avatars[game.avatar];
                 if (screenPlayerX + player.width >= -50 && screenPlayerX <= canvas.width + 50) {
@@ -2056,14 +2057,15 @@ function resizeCanvas() {
                     const bodyLength = player.height * 0.45;
                     const armLength = player.width * 0.7;
                     const legLength = player.height * 0.45;
-
+    
+    
     // Efectos visuales (glow, bright, dark)
     ctx.save();
     if (player.glow) {
         ctx.shadowColor = avatar.color;
         ctx.shadowBlur = 15;
     }
-    let skinColor = "#f7d7b6";
+    let skinColor = "Black";
     let shirtColor = "#2196F3";
     let pantsColor = "#444";
     let shoeColor = "#222";
